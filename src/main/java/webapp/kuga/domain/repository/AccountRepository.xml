@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="webapp.domain.repository.AccountMapper">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="webapp.domain.repository.AccountRepository">
+    <sql id="accountColumns"> ${alias}.id,${alias}.name,${alias}.email,${alias}.password </sql>
+
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO account (title, details, finished) VALUES (#{title}, #{details}, #{finished})
+        INSERT 
+            INTO 
+                account (
+                    name, 
+                    email, 
+                    password
+                ) 
+            VALUES (
+                #{name}, 
+                #{email}, 
+                #{password}
+            )
     </insert>
     <select id="find" resultType="webapp.domain.model.Account">
-        SELECT id, title, details, finished FROM account WHERE id = #{id}
+        SELECT
+        <include refid="accountColumns">
+            <property name="alias" value="a" />
+        </include>
+        FROM 
+                account a
+            WHERE 
+                a.id = #{id}
+    </select>
+    <select id="findByEmail" resultType="webapp.domain.model.Account">
+        SELECT
+        <include refid="accountColumns">
+            <property name="alias" value="a" />
+        </include>
+        FROM 
+                account a
+            WHERE 
+                a.email = #{email}
     </select>
 </mapper>
