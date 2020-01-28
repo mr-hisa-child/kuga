@@ -5,8 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Account extends BaseEntity {
+public class Member extends BaseEntity {
+
     private String name;
-    private String email;
-    private String password;
+    private String no;
+    private String teamId;
 }

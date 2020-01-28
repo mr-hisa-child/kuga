@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="webapp.kuga.domain.repository.account_team.AccountTeamRepository">
+
+    <insert id="insert">
+        INSERT 
+            INTO 
+                account_team (
+                    account_id,
+                    team_id
+                ) 
+            VALUES (
+                #{accountId},
+                #{teamId}
+            )
+    </insert>
+   
+</mapper>

@@ -1,6 +1,8 @@
 package webapp.kuga.app.controller.signup;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,11 +18,16 @@ public class SignupController {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     @PostMapping
-    public String signup(@RequestBody Signup signup) {
+    public ResponseEntity<?> signup(@RequestBody SignupRequestBody signup) {
         Account account = new Account();
         account.setEmail(signup.getEmail());
+        account.setPassword(passwordEncoder.encode(signup.getPassword()));
+        account.setName(signup.getName());
         accountService.signup(account);
-        return "";
+        return ResponseEntity.ok().build();
     }
 }

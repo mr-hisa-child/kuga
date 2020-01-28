@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="webapp.kuga.domain.repository.score.ScoreRepository">
+    <sql id="scoreColumns"> 
+    ${alias}.id,
+    ${alias}.activity_id,
+    ${alias}.member_id,
+    ${alias}.goal,
+    ${alias}.assist,
+    ${alias}.win 
+    </sql>
+
+    <insert id="insert">
+        INSERT 
+            INTO 
+                score (
+                    id,
+                    activity_id,
+                    member_id,
+                    goal, 
+                    assist,
+                    win
+                ) 
+            VALUES (
+                #{id},
+                #{activityId},
+                #{memberId}, 
+                #{goal},
+                #{assist},
+                #{win}
+            )
+    </insert>
+    <update id="update">
+        UPDATE
+                score
+            SET
+                goal = #{goal},
+                assist = #{assist},
+                win = #{win}
+            WHERE
+                id = #{id}
+    </update>
+    <select id="select" resultType="webapp.kuga.domain.model.Score">
+        SELECT
+        <include refid="scoreColumns">
+            <property name="alias" value="a" />
+        </include>
+            FROM 
+                score a
+            WHERE 
+                a.id = #{id}
+    </select>
+
+    <select id="selectByActivityId" resultType="webapp.kuga.domain.model.Score">
+        SELECT
+        <include refid="scoreColumns">
+            <property name="alias" value="a" />
+        </include>
+            FROM 
+                score a
+            WHERE 
+                a.activity_id = #{activityId}
+    </select>
+
+    <select id="selectByMemberId" resultType="webapp.kuga.domain.model.Score">
+        SELECT
+        <include refid="scoreColumns">
+            <property name="alias" value="a" />
+        </include>
+            FROM 
+                score a
+            WHERE 
+                a.member_id = #{memberId}
+    </select>
+</mapper>

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import webapp.kuga.domain.model.Account;
-import webapp.kuga.domain.repository.AccountRepository;
+import webapp.kuga.domain.repository.account.AccountRepository;
 
 @Service
 public class AccountService {

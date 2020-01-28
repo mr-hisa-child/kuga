@@ -1,4 +1,4 @@
-package webapp.kuga.domain.repository;
+package webapp.kuga.domain.repository.account;
 
 import org.apache.ibatis.annotations.Mapper;
 
