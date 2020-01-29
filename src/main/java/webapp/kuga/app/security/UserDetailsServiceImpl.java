@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(username);
         if (Objects.isNull(account)) {
-            return null;
+            throw new UsernameNotFoundException(username);
         }
         return new AuthUser(account.getEmail(), account.getPassword(), account.getId());
     }

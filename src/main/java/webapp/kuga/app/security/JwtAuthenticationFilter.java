@@ -15,6 +15,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -69,5 +71,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(Algorithm.HMAC512("test"));
 
         res.addHeader(SecurityConstant.HEADER_STRING, SecurityConstant.TOKEN_PREFIX + token);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+            HttpServletResponse response, AuthenticationException failed)
+            throws IOException, ServletException {
+        SecurityContextHolder.clearContext();
+        response.setStatus(401);
     }
 }
