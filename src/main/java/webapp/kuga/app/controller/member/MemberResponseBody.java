@@ -17,7 +17,7 @@ public class MemberResponseBody {
         return this.member.getName();
     }
 
-    public String getNo() {
+    public Integer getNo() {
         return this.member.getNo();
     }
 }

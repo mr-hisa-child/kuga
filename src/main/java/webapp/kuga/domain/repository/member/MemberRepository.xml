@@ -9,12 +9,14 @@
                 member (
                     id,
                     name, 
-                    no
+                    no,
+                    team_id
                 ) 
             VALUES (
                 #{id},
                 #{name}, 
-                #{no}
+                #{no},
+                #{teamId}
             )
     </insert>
     <update id="update">

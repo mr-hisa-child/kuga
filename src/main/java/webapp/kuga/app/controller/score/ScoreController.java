@@ -47,7 +47,7 @@ public class ScoreController {
                 .collect(Collectors.toList());
     }
 
-    @PutMapping(path = "{id}/increment/{item}")
+    @PutMapping(path = "score/{id}/increment/{item}")
     public ResponseEntity<?> increment(@PathVariable String id, @PathVariable String item) {
 
         Score score = scoreService.find(id);
@@ -75,7 +75,7 @@ public class ScoreController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(path = "{id}/decrement/{item}")
+    @PutMapping(path = "score/{id}/decrement/{item}")
     public ResponseEntity<?> decrement(@PathVariable String id, @PathVariable String item) {
 
         Score score = scoreService.find(id);

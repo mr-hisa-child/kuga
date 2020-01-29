@@ -18,6 +18,6 @@ public class ActivityResponseBody {
     }
 
     public String getDate() {
-        return this.activity.getYear() + "-" + this.activity.getMonth() + "-" + this.activity.getDay();
+        return this.activity.getDate();
     }
 }

@@ -1,6 +1,10 @@
 package webapp.kuga.app.controller.activity;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import com.google.common.collect.Lists;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +34,18 @@ public class ActivityController {
 
     @Autowired
     private ActivityService activityService;
+
+    @GetMapping
+    public List<ActivityResponseBody> find(@PathVariable String teamId) {
+        Team team = teamService.find(teamId);
+        if (Objects.isNull(team)) {
+            return Lists.newArrayList();
+        }
+        return activityService.findByTeamId(teamId)
+                .stream()
+                .map(activity -> new ActivityResponseBody(activity))
+                .collect(Collectors.toList());
+    }
 
     @GetMapping(path = "{id}")
     public ResponseEntity<ActivityResponseBody> find(@PathVariable String teamId, @PathVariable String id) {

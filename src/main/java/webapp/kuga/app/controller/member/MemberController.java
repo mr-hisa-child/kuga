@@ -56,7 +56,7 @@ public class MemberController {
             @RequestBody MemberRequestBody requestBody,
             @AuthenticationPrincipal LoginUser loginUser) {
 
-        Team team = teamService.find(id);
+        Team team = teamService.find(teamId);
         if (Objects.isNull(team)) {
             return ResponseEntity.badRequest().build();
         }
