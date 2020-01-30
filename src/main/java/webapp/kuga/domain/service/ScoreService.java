@@ -21,6 +21,10 @@ public class ScoreService {
         return scoreRepository.selectByActivityId(activityId);
     }
 
+    public List<Score> findByTeamIdAndYear(String teamId, int year) {
+        return null;
+    }
+
     public void create(Score score) {
         scoreRepository.insert(score);
     }

@@ -16,13 +16,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import webapp.kuga.app.security.LoginUser;
 import webapp.kuga.domain.model.Activity;
 import webapp.kuga.domain.model.Score;
+import webapp.kuga.domain.model.Team;
 import webapp.kuga.domain.service.ActivityService;
 import webapp.kuga.domain.service.ScoreService;
+import webapp.kuga.domain.service.TeamService;
 
 @RestController
 public class ScoreController {
@@ -32,6 +35,23 @@ public class ScoreController {
 
     @Autowired
     private ScoreService scoreService;
+
+    @Autowired
+    private TeamService teamService;
+
+    @GetMapping(path = "team/{teamId}/score")
+    public List<ScoreResponseBody> findByTeamIdAndYear(@PathVariable String teamId, @RequestParam("year") int year) {
+
+        Team team = teamService.find(teamId);
+        if (Objects.isNull(team)) {
+            return Lists.newArrayList();
+        }
+
+        return scoreService.findByTeamIdAndYear(teamId, year)
+                .stream()
+                .map(score -> new ScoreResponseBody(score))
+                .collect(Collectors.toList());
+    }
 
     @GetMapping(path = "activity/{activityId}/score")
     public List<ScoreResponseBody> findByActivityId(@PathVariable String activityId) {
