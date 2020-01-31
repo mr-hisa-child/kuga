@@ -38,6 +38,7 @@
   </v-content>
 </template>
 <script>
+import api from '@/utils/api'
 export default {
 	layout: 'none',
 	data() {
@@ -52,9 +53,7 @@ export default {
 				email: this.email,
 				password: this.password
 			}
-			const res = await this.$axios.post('/signin', data).catch(err => {
-				return err.response
-			})
+			const res = api.signin(data)
 
 			if (res.status == 200) {
 				// 正常

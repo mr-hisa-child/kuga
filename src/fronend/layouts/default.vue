@@ -10,7 +10,7 @@
       </v-container>
     </v-content>
 
-    <v-bottom-navigation :value="activeBtn" grow>
+    <v-bottom-navigation :value="activeBtn" grow fixed>
       <v-btn to="/member" @click="title = 'メンバー'">
         <span>メンバー</span>
         <v-icon>mdi-account</v-icon>
@@ -21,8 +21,8 @@
         <v-icon>mdi-calendar-check</v-icon>
       </v-btn>
 
-      <v-btn to="/score" @click="title = 'スコア'">
-        <span>スコア</span>
+      <v-btn to="/score" @click="title = '個人成績'">
+        <span>個人成績</span>
         <v-icon>mdi-grid</v-icon>
       </v-btn>
     </v-bottom-navigation>
@@ -33,7 +33,7 @@
 export default {
 	data() {
 		return {
-			title: 'Vuetify.js',
+			title: 'れこった',
 			activeBtn: 1
 		}
 	}

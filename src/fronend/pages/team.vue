@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import api from '@/utils/api'
 export default {
 	layout: 'none',
 	data() {
@@ -54,9 +55,7 @@ export default {
 				name: this.name,
 				category: this.category
 			}
-			const res = this.$axios.post('/team', data).catch(err => {
-				return err.response
-			})
+			const res = api.createTeam(data)
 
 			if (res.status == 200) {
 				// 正常

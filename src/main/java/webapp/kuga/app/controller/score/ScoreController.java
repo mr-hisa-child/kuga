@@ -68,7 +68,7 @@ public class ScoreController {
     }
 
     @PutMapping(path = "score/{id}/increment/{item}")
-    public ResponseEntity<?> increment(@PathVariable String id, @PathVariable String item) {
+    public ResponseEntity<ScoreResponseBody> increment(@PathVariable String id, @PathVariable String item) {
 
         Score score = scoreService.find(id);
 
@@ -92,11 +92,11 @@ public class ScoreController {
 
         scoreService.update(score);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ScoreResponseBody(score));
     }
 
     @PutMapping(path = "score/{id}/decrement/{item}")
-    public ResponseEntity<?> decrement(@PathVariable String id, @PathVariable String item) {
+    public ResponseEntity<ScoreResponseBody> decrement(@PathVariable String id, @PathVariable String item) {
 
         Score score = scoreService.find(id);
 
@@ -120,7 +120,7 @@ public class ScoreController {
 
         scoreService.update(score);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ScoreResponseBody(score));
     }
 
     @DeleteMapping(path = "{id}")
