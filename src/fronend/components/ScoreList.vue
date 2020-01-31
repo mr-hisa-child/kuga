@@ -4,7 +4,7 @@
       <tbody>
         <tr v-for="item in scoreList" :key="item.id">
           <td class="title">{{ item.name }}</td>
-          <td class="text-center" style="width:88px">
+          <td class="text-center" style="width:88px" v-if="editable">
             <v-btn
               class="mx-2"
               outlined
@@ -18,7 +18,7 @@
             </v-btn>
           </td>
           <td class="text-center display-1" style="width:30px">{{ item[category] }}</td>
-          <td class="text-center" style="width:88px">
+          <td class="text-center" style="width:88px" v-if="editable">
             <v-btn
               class="mx-2"
               outlined
@@ -41,22 +41,26 @@
 import api from '@/utils/api'
 import { mapGetters, mapActions } from 'vuex'
 export default {
-	props: {
-		category: {
-			type: String,
-			default: ''
-		}
-	},
-	computed: {
-		...mapGetters({
-			scoreList: 'score/scoreList'
-		})
-	},
-	methods: {
-		...mapActions({
-			increment: 'score/increment',
-			decrement: 'score/decrement'
-		})
-	}
+  props: {
+    category: {
+      type: String,
+      default: ''
+    },
+    editable: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    ...mapGetters({
+      scoreList: 'score/scoreList'
+    })
+  },
+  methods: {
+    ...mapActions({
+      increment: 'score/increment',
+      decrement: 'score/decrement'
+    })
+  }
 }
 </script>

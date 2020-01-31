@@ -12,7 +12,7 @@
         </v-btn>
       </template>
     </v-simple-table>
-    <v-dialog v-model="dialog" width="500">
+    <v-dialog v-model="dialog" width="500" persistent>
       <v-card>
         <v-form ref="form" v-model="valid" :lazy-validation="lazy">
           <v-card-title class="headline">メンバー</v-card-title>
@@ -36,63 +36,61 @@
 <script>
 import api from '@/utils/api'
 export default {
-	data() {
-		return {
-			items: null,
-			targetItem: {},
-			dialog: false,
-			form: {
-				name: null
-			},
-			valid: true,
-			lazy: true,
-			nameRules: [
-				v => !!v || '名前を入力してください',
-				v =>
-					(v && v.length <= 20) ||
-					'名前は20文字以内で入力してください'
-			]
-		}
-	},
-	created() {
-		this.load()
-	},
-	methods: {
-		load() {
-			const res = api.getMemberList()
+  data() {
+    return {
+      items: null,
+      targetItem: {},
+      dialog: false,
+      form: {
+        name: null
+      },
+      valid: true,
+      lazy: true,
+      nameRules: [
+        v => !!v || '名前を入力してください',
+        v => (v && v.length <= 20) || '名前は20文字以内で入力してください'
+      ]
+    }
+  },
+  created() {
+    this.load()
+  },
+  methods: {
+    load() {
+      const res = api.getMemberList()
 
-			if (res.status == 200) {
-				// 正常
-				this.items = res.data
-			} else {
-				this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
-			}
-		},
-		selectRow(item) {
-			this.form = {
-				id: item.id,
-				name: item.name
-			}
-			this.dialog = true
-		},
-		deleteMember() {
-			const res = api.deleteMemeber(targetItem.id)
-			if (res.status === 200) {
-				this.load()
-				this.dialog = false
-			} else {
-				this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
-			}
-		},
-		saveMember() {
-			const res = api.saveMember(this.form)
-			if (res.status === 200) {
-				this.load()
-				this.dialog = false
-			} else {
-				this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
-			}
-		}
-	}
+      if (res.status == 200) {
+        // 正常
+        this.items = res.data
+      } else {
+        this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
+      }
+    },
+    selectRow(item) {
+      this.form = {
+        id: item.id,
+        name: item.name
+      }
+      this.dialog = true
+    },
+    deleteMember() {
+      const res = api.deleteMemeber(targetItem.id)
+      if (res.status === 200) {
+        this.load()
+        this.dialog = false
+      } else {
+        this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
+      }
+    },
+    saveMember() {
+      const res = api.saveMember(this.form)
+      if (res.status === 200) {
+        this.load()
+        this.dialog = false
+      } else {
+        this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
+      }
+    }
+  }
 }
 </script>

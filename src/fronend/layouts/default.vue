@@ -21,7 +21,7 @@
         <v-icon>mdi-calendar-check</v-icon>
       </v-btn>
 
-      <v-btn to="/score" @click="title = '個人成績'">
+      <v-btn to="/record" @click="title = '個人成績'">
         <span>個人成績</span>
         <v-icon>mdi-grid</v-icon>
       </v-btn>
@@ -31,11 +31,11 @@
 
 <script>
 export default {
-	data() {
-		return {
-			title: 'れこった',
-			activeBtn: 1
-		}
-	}
+  data() {
+    return {
+      title: 'れこった',
+      activeBtn: 1
+    }
+  }
 }
 </script>

@@ -84,9 +84,28 @@ const getActivityList = () => {
         ]
     }
 }
+
+const getScoreListByYear = (year) => {
+    // const teamId = localStorage.getItem('team')
+    // return get(`/team/${teamId}/score?year=${year}`)
+    return {
+        status: 200,
+        data: [
+            {
+                id: '1234',
+                name: '小野',
+                attend: 2,
+                goal: 5,
+                assist: 4,
+                win: 2
+            },
+        ]
+    }
+}
+
 const getScoreList = (activityId) => {
     // const teamId = localStorage.getItem('team')
-    // return get(`/team/${teamId}/activity`)
+    // return get(`/activity/${activityId}/score`)
     return {
         status: 200,
         data: [
@@ -224,5 +243,6 @@ export default {
     increment,
     decrement,
     deleteMember,
-    saveMember
+    saveMember,
+    getScoreListByYear
 }
