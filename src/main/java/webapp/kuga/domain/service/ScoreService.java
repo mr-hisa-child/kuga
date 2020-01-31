@@ -36,4 +36,8 @@ public class ScoreService {
     public void remove(String id) {
         scoreRepository.delete(id);
     }
+
+    public void remove(String activityId, String memberId) {
+        scoreRepository.deleteByActivityIdAndMemberId(activityId, memberId);
+    }
 }

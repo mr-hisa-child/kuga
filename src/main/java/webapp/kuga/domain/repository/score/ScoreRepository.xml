@@ -40,12 +40,20 @@
             WHERE
                 id = #{id}
     </update>
+    <delete id="deleteByActivityIdAndMemberId">
+        DELETE 
+            FROM 
+                score 
+            WHERE 
+                activity_id = #{activityId} 
+                AND member_id = #{memberId}
+    </delete>
     <select id="select" resultType="webapp.kuga.domain.model.Score">
         SELECT
         <include refid="scoreColumns">
             <property name="alias" value="a" />
         </include>
-            FROM 
+        FROM 
                 score a
             WHERE 
                 a.id = #{id}
@@ -56,7 +64,7 @@
         <include refid="scoreColumns">
             <property name="alias" value="a" />
         </include>
-            FROM 
+        FROM 
                 score a
             WHERE 
                 a.activity_id = #{activityId}
@@ -67,7 +75,7 @@
         <include refid="scoreColumns">
             <property name="alias" value="a" />
         </include>
-            FROM 
+        FROM 
                 score a
             WHERE 
                 a.member_id = #{memberId}
