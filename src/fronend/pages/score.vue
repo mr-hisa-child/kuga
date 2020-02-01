@@ -82,7 +82,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      getScoreListByActivityId: 'score/findByActivityId'
+      getScoreListByActivityId: 'score/findByActivityId',
+      saveScoreList: 'score/save'
     }),
     loadMemberList() {
       const res = api.getMemberList()
@@ -94,7 +95,14 @@ export default {
         this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
       }
     },
-    saveAttend() {}
+    saveAttend() {
+      const res = api.attend(this.activityId, { memberList: this.memberList })
+      if (res.status === 200) {
+        this.saveScoreList(res.data)
+      } else {
+        this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
+      }
+    }
   }
 }
 </script>

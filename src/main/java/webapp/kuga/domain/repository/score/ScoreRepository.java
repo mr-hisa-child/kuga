@@ -16,7 +16,5 @@ public interface ScoreRepository {
 
     public void delete(String id);
 
-    public void deleteByActivityIdAndMemberId(String activityId, String memberId);
-
     public List<Score> selectByActivityId(String activityId);
 }

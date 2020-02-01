@@ -44,6 +44,9 @@ export const actions = {
         } else {
 
         }
+    },
+    save({ commit }, payload) {
+        commit('save', payload)
     }
 }
 

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -139,34 +138,20 @@ public class ScoreController {
     }
 
     @PutMapping(path = "activity/{activityId}/attend")
-    @Transactional
-    public ResponseEntity<?> attend(@PathVariable String activityId, @RequestBody ScoreRequestBody requestBody) {
+    public ResponseEntity<List<ScoreResponseBody>> attend(@PathVariable String activityId,
+            @RequestBody ScoreRequestBody requestBody) {
+
         Activity activity = activityService.find(activityId);
         if (Objects.isNull(activity)) {
             return ResponseEntity.badRequest().build();
         }
 
-        List<String> memberList = scoreService.findByActivityId(activityId)
+        List<ScoreResponseBody> data = scoreService.attend(activityId, requestBody.getMemberList())
                 .stream()
-                .map(score -> score.getMemberId())
+                .map(score -> new ScoreResponseBody(score))
                 .collect(Collectors.toList());
 
-        memberList.parallelStream()
-                .filter(memberId -> !requestBody.getMemberList().contains(memberId))
-                .forEach(memberId -> {
-                    scoreService.remove(activityId, memberId);
-                });
-
-        requestBody.getMemberList().parallelStream()
-                .filter(memberId -> !memberList.contains(memberId))
-                .forEach(memberId -> {
-                    Score score = new Score();
-                    score.setActivityId(activityId);
-                    score.setMemberId(memberId);
-                    scoreService.create(score);
-                });
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(data);
     }
 
 }

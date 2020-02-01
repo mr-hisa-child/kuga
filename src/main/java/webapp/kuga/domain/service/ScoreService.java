@@ -1,6 +1,9 @@
 package webapp.kuga.domain.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.google.common.collect.Lists;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +40,34 @@ public class ScoreService {
         scoreRepository.delete(id);
     }
 
-    public void remove(String activityId, String memberId) {
-        scoreRepository.deleteByActivityIdAndMemberId(activityId, memberId);
+    public List<Score> attend(String activityId, List<String> attendMemberList) {
+        List<Score> scoreList = findByActivityId(activityId)
+                .stream()
+                .collect(Collectors.toList());
+
+        List<Score> newScoreList = Lists.newArrayList();
+        List<String> memberList = Lists.newArrayList();
+
+        scoreList.parallelStream()
+                .forEach(score -> {
+                    memberList.add(score.getMemberId());
+                    if (attendMemberList.contains(score.getMemberId())) {
+                        newScoreList.add(score);
+                    } else {
+                        remove(score.getId());
+                    }
+                });
+
+        attendMemberList.parallelStream()
+                .filter(memberId -> !memberList.contains(memberId))
+                .forEach(memberId -> {
+                    Score score = new Score();
+                    score.setActivityId(activityId);
+                    score.setMemberId(memberId);
+                    create(score);
+                    newScoreList.add(score);
+                });
+
+        return newScoreList;
     }
 }

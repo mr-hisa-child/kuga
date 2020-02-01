@@ -210,6 +210,10 @@ const saveMember = (data) => {
     }
 }
 
+const attend = (activityId, data) => {
+    return put(`/activity/${activityId}/attend`, data)
+}
+
 const post = async (path, params, option) => {
     return await window.$nuxt.$axios.post(path, params, option).catch(err => {
         return err.response
@@ -244,5 +248,6 @@ export default {
     decrement,
     deleteMember,
     saveMember,
-    getScoreListByYear
+    getScoreListByYear,
+    attend
 }
