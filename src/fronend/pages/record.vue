@@ -1,18 +1,6 @@
 <template>
   <div>
-    <v-row>
-      <v-col>
-        <v-btn dark fab outlined color="primary" x-small>
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
-      </v-col>
-      <v-col class="title text-center">{{year}}年</v-col>
-      <v-col class="text-right">
-        <v-btn dark fab outlined color="primary" x-small>
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-      </v-col>
-    </v-row>
+    <YearFilter @change-year="reload" />
     <v-row>
       <v-col>
         <v-tabs v-model="tab" class="elevation-2" dark grow>
@@ -41,25 +29,25 @@
 </template>
 <script>
 import ScoreList from '@/components/ScoreList'
+import YearFilter from '@/components/YearFilter'
 import { mapGetters, mapActions } from 'vuex'
 export default {
-  components: {
-    ScoreList
-  },
-  data() {
-    return {
-      tab: null,
-      tabs: 3,
-      year: 2020
-    }
-  },
-  created() {
-    this.getScoreListByYear(this.year)
-  },
-  methods: {
-    ...mapActions({
-      getScoreListByYear: 'score/findByYear'
-    })
-  }
+	components: {
+		ScoreList,
+		YearFilter
+	},
+	data() {
+		return {
+			tab: null
+		}
+	},
+	methods: {
+		...mapActions({
+			getScoreListByYear: 'score/findByYear'
+		}),
+		reload(year) {
+			this.getScoreListByYear(year)
+		}
+	}
 }
 </script>

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import webapp.kuga.app.security.LoginUser;
 import webapp.kuga.domain.model.Activity;
 import webapp.kuga.domain.model.Score;
-import webapp.kuga.domain.model.Team;
 import webapp.kuga.domain.service.ActivityService;
 import webapp.kuga.domain.service.ScoreService;
 import webapp.kuga.domain.service.TeamService;
@@ -39,10 +38,10 @@ public class ScoreController {
     private TeamService teamService;
 
     @GetMapping(path = "team/{teamId}/score")
-    public List<ScoreResponseBody> findByTeamIdAndYear(@PathVariable String teamId, @RequestParam("year") int year) {
+    public List<ScoreResponseBody> findByTeamIdAndYear(@PathVariable String teamId, @RequestParam("year") int year,
+            @AuthenticationPrincipal LoginUser loginUser) {
 
-        Team team = teamService.find(teamId);
-        if (Objects.isNull(team)) {
+        if (!teamService.isEnabled(loginUser.getAccountId(), teamId)) {
             return Lists.newArrayList();
         }
 
@@ -53,10 +52,15 @@ public class ScoreController {
     }
 
     @GetMapping(path = "activity/{activityId}/score")
-    public List<ScoreResponseBody> findByActivityId(@PathVariable String activityId) {
+    public List<ScoreResponseBody> findByActivityId(@PathVariable String activityId,
+            @AuthenticationPrincipal LoginUser loginUser) {
 
         Activity activity = activityService.find(activityId);
         if (Objects.isNull(activity)) {
+            return Lists.newArrayList();
+        }
+
+        if (!teamService.isEnabled(loginUser.getAccountId(), activity.getTeamId())) {
             return Lists.newArrayList();
         }
 
@@ -67,11 +71,16 @@ public class ScoreController {
     }
 
     @PutMapping(path = "score/{id}/increment/{item}")
-    public ResponseEntity<ScoreResponseBody> increment(@PathVariable String id, @PathVariable String item) {
+    public ResponseEntity<ScoreResponseBody> increment(@PathVariable String id, @PathVariable String item,
+            @AuthenticationPrincipal LoginUser loginUser) {
 
         Score score = scoreService.find(id);
 
         if (Objects.isNull(score)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (!teamService.isEnabled(loginUser.getAccountId(), score.getTeamId())) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -95,11 +104,16 @@ public class ScoreController {
     }
 
     @PutMapping(path = "score/{id}/decrement/{item}")
-    public ResponseEntity<ScoreResponseBody> decrement(@PathVariable String id, @PathVariable String item) {
+    public ResponseEntity<ScoreResponseBody> decrement(@PathVariable String id, @PathVariable String item,
+            @AuthenticationPrincipal LoginUser loginUser) {
 
         Score score = scoreService.find(id);
 
         if (Objects.isNull(score)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (!teamService.isEnabled(loginUser.getAccountId(), score.getTeamId())) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -122,13 +136,17 @@ public class ScoreController {
         return ResponseEntity.ok(new ScoreResponseBody(score));
     }
 
-    @DeleteMapping(path = "{id}")
+    @DeleteMapping(path = "score/{id}")
     public ResponseEntity<?> remove(@PathVariable String id,
             @AuthenticationPrincipal LoginUser loginUser) {
 
         Score score = scoreService.find(id);
 
         if (Objects.isNull(score)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (!teamService.isEnabled(loginUser.getAccountId(), score.getTeamId())) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -139,10 +157,14 @@ public class ScoreController {
 
     @PutMapping(path = "activity/{activityId}/attend")
     public ResponseEntity<List<ScoreResponseBody>> attend(@PathVariable String activityId,
-            @RequestBody ScoreRequestBody requestBody) {
+            @RequestBody ScoreRequestBody requestBody, @AuthenticationPrincipal LoginUser loginUser) {
 
         Activity activity = activityService.find(activityId);
         if (Objects.isNull(activity)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (!teamService.isEnabled(loginUser.getAccountId(), activity.getTeamId())) {
             return ResponseEntity.badRequest().build();
         }
 

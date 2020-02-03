@@ -1,18 +1,6 @@
 <template>
   <div>
-    <v-row>
-      <v-col>
-        <v-btn dark fab outlined color="primary" x-small>
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
-      </v-col>
-      <v-col class="title text-center">{{year}}年</v-col>
-      <v-col class="text-right">
-        <v-btn dark fab outlined color="primary" x-small>
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-      </v-col>
-    </v-row>
+    <YearFilter @change-year="reload" />
     <v-row>
       <v-col>
         <v-simple-table class="bottom-nav-margin">
@@ -63,10 +51,10 @@
           <v-divider></v-divider>
 
           <v-card-actions>
-            <v-btn outlined color="error" @click="dialog = false">削除</v-btn>
+            <v-btn outlined color="error" @click="deleteActivity()">削除</v-btn>
             <v-spacer></v-spacer>
             <v-btn outlined @click="dialog = false">キャンセル</v-btn>
-            <v-btn outlined color="success" @click="dialog = false">保存</v-btn>
+            <v-btn outlined color="success" @click="saveActivity()">保存</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -74,50 +62,71 @@
   </div>
 </template>
 <script>
+import YearFilter from '@/components/YearFilter'
 import { mapActions } from 'vuex'
 import api from '@/utils/api'
 export default {
-  data() {
-    return {
-      items: null,
-      targetItem: {},
-      dialog: false,
-      year: 2020,
-      form: {
-        date: null,
-        title: null
-      },
-      valid: true,
-      lazy: true,
-      nameRules: [
-        v => !!v || '名前を入力してください',
-        v => (v && v.length <= 20) || '名前は20文字以内で入力してください'
-      ],
-      picker: false
-    }
-  },
-  created() {
-    const res = api.getActivityList()
+	components: {
+		YearFilter
+	},
+	data() {
+		return {
+			items: null,
+			targetItem: {},
+			dialog: false,
+			year: null,
+			form: {
+				date: null,
+				title: null
+			},
+			valid: true,
+			lazy: true,
+			nameRules: [
+				v => !!v || '名前を入力してください',
+				v =>
+					(v && v.length <= 20) ||
+					'名前は20文字以内で入力してください'
+			],
+			picker: false
+		}
+	},
+	methods: {
+		...mapActions({
+			setActivityId: 'activity/setId'
+		}),
+		selectRow(item) {
+			this.targetItem = item
+			this.form = {
+				date: item.date,
+				title: item.title
+			}
+			this.dialog = true
+		},
+		selectScore() {
+			this.setActivityId(this.targetItem.id)
+			this.$router.push('/score')
+		},
+		deleteActivity() {
+			const res = api.deleteActivity(this.targetItem.id)
+			if (res.status == 200) {
+				this.reload(this.year)
+				this.dialog = false
+			} else {
+				this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
+			}
+		},
+		saveActivity() {},
+		reload(year) {
+			this.year = year
+			const res = api.getActivityList(year)
 
-    if (res.status == 200) {
-      // 正常
-      this.items = res.data
-    } else {
-      this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
-    }
-  },
-  methods: {
-    ...mapActions({
-      setActivityId: 'activity/setId'
-    }),
-    selectRow(item) {
-      this.targetItem = item
-      this.dialog = true
-    },
-    selectScore() {
-      this.setActivityId(this.targetItem.id)
-      this.$router.push('/score')
-    }
-  }
+			if (res.status == 200) {
+				// 正常
+				this.items = res.data
+			} else {
+				this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
+			}
+		}
+	}
 }
 </script>

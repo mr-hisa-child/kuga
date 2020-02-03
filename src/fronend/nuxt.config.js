@@ -31,13 +31,15 @@ export default {
     ** Plugins to load before mounting the App
     */
     plugins: [
-        { src: '~/plugins/axios.js', ssr: false }
+        { src: '~/plugins/axios.js', ssr: false },
+        { src: '~/plugins/vuetify.js', ssr: false }
     ],
     /*
     ** Nuxt.js dev-modules
     */
     buildModules: [
         '@nuxtjs/vuetify',
+        '@nuxtjs/moment',
     ],
     /*
     ** Nuxt.js modules
@@ -75,7 +77,8 @@ export default {
                     success: colors.green.accent3
                 }
             }
-        }
+        },
+        defaultAssets: false
     },
     /*
     ** Build configuration

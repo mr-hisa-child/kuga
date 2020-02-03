@@ -3,6 +3,7 @@
 <mapper namespace="webapp.kuga.domain.repository.score.ScoreRepository">
     <sql id="scoreColumns"> 
     ${alias}.id,
+    ${alias}.team_id,
     ${alias}.activity_id,
     ${alias}.member_id,
     ${alias}.goal,
@@ -15,6 +16,7 @@
             INTO 
                 score (
                     id,
+                    team_id,
                     activity_id,
                     member_id,
                     goal, 
@@ -23,6 +25,7 @@
                 ) 
             VALUES (
                 #{id},
+                #{teamId},
                 #{activityId},
                 #{memberId}, 
                 #{goal},

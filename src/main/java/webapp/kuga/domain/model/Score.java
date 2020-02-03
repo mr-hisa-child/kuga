@@ -8,6 +8,7 @@ import lombok.Setter;
 public class Score extends BaseEntity {
     private String activityId;
     private String memberId;
+    private String teamId;
     private int goal;
     private int assist;
     private int win;

@@ -69,20 +69,24 @@ const getMemberList = () => {
     }
 }
 
-const getActivityList = () => {
+const getActivityList = (year) => {
     // const teamId = localStorage.getItem('team')
-    // return get(`/team/${teamId}/activity`)
+    // return get(`/team/${teamId}/activity?year=${year}`)
     return {
         status: 200,
         data: [
             {
                 id: '1234',
-                date: '2020/01/20',
+                date: '2020-01-20',
                 title: '練習',
                 count: 5
             }
         ]
     }
+}
+
+const deleteActivity = (activityId) => {
+    return del(`/activity/${activityId}`)
 }
 
 const getScoreListByYear = (year) => {
@@ -214,6 +218,17 @@ const attend = (activityId, data) => {
     return put(`/activity/${activityId}/attend`, data)
 }
 
+const getTeam = (teamId) => {
+    // return get(`/team/${teamId}`)
+    return {
+        status: 200,
+        data: {
+            teamId: 1,
+            teamName: "FC.AVANZARE"
+        }
+    }
+}
+
 const post = async (path, params, option) => {
     return await window.$nuxt.$axios.post(path, params, option).catch(err => {
         return err.response
@@ -249,5 +264,7 @@ export default {
     deleteMember,
     saveMember,
     getScoreListByYear,
-    attend
+    attend,
+    deleteActivity,
+    getTeam
 }

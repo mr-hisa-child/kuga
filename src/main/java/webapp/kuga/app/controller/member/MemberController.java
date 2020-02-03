@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Lists;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +14,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import webapp.kuga.app.security.LoginUser;
 import webapp.kuga.domain.model.Member;
-import webapp.kuga.domain.model.Team;
 import webapp.kuga.domain.service.MemberService;
 import webapp.kuga.domain.service.TeamService;
 
 @RestController
-@RequestMapping("team/{teamId}/member")
 public class MemberController {
 
     @Autowired
@@ -35,34 +30,33 @@ public class MemberController {
     @Autowired
     private TeamService teamService;
 
-    @GetMapping(path = "{id}")
-    public ResponseEntity<MemberResponseBody> find(@PathVariable String teamId, @PathVariable String id) {
+    @GetMapping(path = "member/{id}")
+    public ResponseEntity<MemberResponseBody> find(@PathVariable String id,
+            @AuthenticationPrincipal LoginUser loginUser) {
 
-        Team team = teamService.find(id);
-        if (Objects.isNull(team)) {
+        Member member = memberService.find(id);
+        if (Objects.isNull(member)) {
             return ResponseEntity.notFound().build();
         }
 
-        Member member = memberService.find(id);
-        if (Objects.isNull(member) || Objects.equals(member.getTeamId(), teamId)) {
+        if (!teamService.isEnabled(loginUser.getAccountId(), member.getTeamId())) {
             return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(new MemberResponseBody(member));
     }
 
-    @PutMapping(path = "{id}")
-    public ResponseEntity<?> update(@PathVariable String teamId, @PathVariable String id,
+    @PutMapping(path = "member/{id}")
+    public ResponseEntity<?> update(@PathVariable String id,
             @RequestBody MemberRequestBody requestBody,
             @AuthenticationPrincipal LoginUser loginUser) {
 
-        Team team = teamService.find(teamId);
-        if (Objects.isNull(team)) {
+        Member member = memberService.find(id);
+        if (Objects.isNull(member)) {
             return ResponseEntity.badRequest().build();
         }
 
-        Member member = memberService.find(id);
-        if (Objects.isNull(member) || Objects.equals(member.getTeamId(), teamId)) {
+        if (!teamService.isEnabled(loginUser.getAccountId(), member.getTeamId())) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -74,17 +68,16 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(path = "{id}")
-    public ResponseEntity<?> remove(@PathVariable String teamId, @PathVariable String id,
+    @DeleteMapping(path = "member/{id}")
+    public ResponseEntity<?> remove(@PathVariable String id,
             @AuthenticationPrincipal LoginUser loginUser) {
 
-        Team team = teamService.find(id);
-        if (Objects.isNull(team)) {
+        Member member = memberService.find(id);
+        if (Objects.isNull(member)) {
             return ResponseEntity.badRequest().build();
         }
 
-        Member member = memberService.find(id);
-        if (Objects.isNull(member) || Objects.equals(member.getTeamId(), teamId)) {
+        if (!teamService.isEnabled(loginUser.getAccountId(), member.getTeamId())) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -93,24 +86,23 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping
-    public List<MemberResponseBody> getMember(@PathVariable String teamId) {
-        Team team = teamService.find(teamId);
-        if (Objects.isNull(team)) {
-            return Lists.newArrayList();
+    @GetMapping(path = "team/{teamId}/member")
+    public ResponseEntity<List<MemberResponseBody>> getMember(@PathVariable String teamId,
+            @AuthenticationPrincipal LoginUser loginUser) {
+        if (!teamService.isEnabled(loginUser.getAccountId(), teamId)) {
+            return ResponseEntity.notFound().build();
         }
 
-        return memberService.findByTeamId(teamId)
+        return ResponseEntity.ok(memberService.findByTeamId(teamId)
                 .stream()
                 .map(member -> new MemberResponseBody(member))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
-    @PostMapping
+    @PostMapping(path = "team/{teamId}/member")
     public ResponseEntity<?> addMember(@PathVariable String teamId,
-            @RequestBody MemberRequestBody requestBody) {
-        Team team = teamService.find(teamId);
-        if (Objects.isNull(team)) {
+            @RequestBody MemberRequestBody requestBody, @AuthenticationPrincipal LoginUser loginUser) {
+        if (!teamService.isEnabled(loginUser.getAccountId(), teamId)) {
             return ResponseEntity.badRequest().build();
         }
 
