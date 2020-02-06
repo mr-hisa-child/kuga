@@ -37,6 +37,7 @@
 
 <script>
 import api from '@/utils/api'
+import { mapActions,mapGetters } from 'vuex'
 export default {
 	data() {
 		return {
@@ -45,15 +46,20 @@ export default {
 			teamName: null
 		}
 	},
-	created() {
-		const teamId = localStorage.getItem('kuga-team')
-		const res = api.getTeam(teamId)
-		if (res.status == 200) {
-			// 正常
-			this.teamName = res.data.teamName
-		} else {
-			this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
-		}
-	}
+    computed: {
+    ...mapGetters({
+      activeTeam: 'team/activeTeam',
+    })
+  },
+
+	async created() {
+		await this.getTeam()
+        this.teamName = this.activeTeam.name
+	},
+    methods: {
+        ...mapActions({
+			getTeam: 'team/getTeam'
+		}),
+    }
 }
 </script>

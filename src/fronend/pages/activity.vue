@@ -7,7 +7,7 @@
           <template v-slot:default>
             <tbody>
               <tr v-for="item in items" :key="item.title" @click="selectRow(item)">
-                <td style="width:100px">{{ item.date }}</td>
+                <td style="width:100px">{{ item.date | formatDate}}</td>
                 <td>{{ item.title }}</td>
                 <td style="width:80px" class="text-right">{{ item.count }}人</td>
               </tr>
@@ -90,6 +90,12 @@ export default {
 			picker: false
 		}
 	},
+    filters:{
+        formatDate: (date) => {
+            const splitDate = date.split('-')
+            return `${splitDate[1]}/${splitDate[2]}`
+        }
+    },
 	methods: {
 		...mapActions({
 			setActivityId: 'activity/setId'

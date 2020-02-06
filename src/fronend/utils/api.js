@@ -7,66 +7,8 @@ const createTeam = (data) => {
 }
 
 const getMemberList = () => {
-    // const teamId = localStorage.getItem('team')
-    // return get(`/team/${teamId}/member`)
-    return {
-        status: 200,
-        data: [
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-
-        ]
-    }
+    const teamId = localStorage.getItem('kuga-team')
+    return get(`/team/${teamId}/member`)
 }
 
 const getActivityList = (year) => {
@@ -210,7 +152,8 @@ const saveMember = (data) => {
     if (data.id) {
         return put(`/member/${data.id}`, data)
     } else {
-        return post(`/member`, data)
+        const teamId = localStorage.getItem('kuga-team')
+        return post(`/team/${teamId}/member`, data)
     }
 }
 
@@ -218,15 +161,20 @@ const attend = (activityId, data) => {
     return put(`/activity/${activityId}/attend`, data)
 }
 
-const getTeam = (teamId) => {
-    // return get(`/team/${teamId}`)
-    return {
-        status: 200,
-        data: {
-            teamId: 1,
-            teamName: "FC.AVANZARE"
-        }
-    }
+const getTeam = () => {
+    const teamId = localStorage.getItem('kuga-team')
+    return get(`/team/${teamId}`)
+    // return {
+    //     status: 200,
+    //     data: {
+    //         teamId: 1,
+    //         teamName: "FC.AVANZARE"
+    //     }
+    // }
+}
+
+const getTeamList = () => {
+    return get(`/team`)
 }
 
 const post = async (path, params, option) => {
@@ -266,5 +214,6 @@ export default {
     getScoreListByYear,
     attend,
     deleteActivity,
-    getTeam
+    getTeam,
+    getTeamList
 }

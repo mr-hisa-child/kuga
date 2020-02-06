@@ -7,7 +7,7 @@
             <td class="title">{{ item.name }}</td>
           </tr>
         </tbody>
-        <v-btn fixed dark fab bottom right color="pink" class="bottom-nav-margin">
+        <v-btn fixed dark fab bottom right color="pink" class="bottom-nav-margin" @click="showDialog()">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
@@ -23,7 +23,7 @@
           <v-divider></v-divider>
 
           <v-card-actions>
-            <v-btn outlined color="error" @click="deleteMember()">削除</v-btn>
+            <v-btn outlined color="error" @click="deleteMember()" v-show="form.id">削除</v-btn>
             <v-spacer></v-spacer>
             <v-btn outlined @click="dialog = false">キャンセル</v-btn>
             <v-btn outlined color="success" :disabled="!valid" @click="saveMember()">保存</v-btn>
@@ -35,6 +35,7 @@
 </template>
 <script>
 import api from '@/utils/api'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -56,8 +57,8 @@ export default {
     this.load()
   },
   methods: {
-    load() {
-      const res = api.getMemberList()
+    async load() {
+      const res = await api.getMemberList()
 
       if (res.status == 200) {
         // 正常
@@ -73,23 +74,32 @@ export default {
       }
       this.dialog = true
     },
-    deleteMember() {
-      const res = api.deleteMemeber(targetItem.id)
-      if (res.status === 200) {
+    async deleteMember() {
+      const res = await api.deleteMember(this.form.id)
+      if (res.status === 204) {
         this.load()
         this.dialog = false
       } else {
         this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
       }
     },
-    saveMember() {
-      const res = api.saveMember(this.form)
-      if (res.status === 200) {
+    async saveMember() {
+
+      const res = await api.saveMember(this.form)
+      if (res.status === 200 || res.status === 201) {
         this.load()
         this.dialog = false
       } else {
         this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
       }
+    },
+    showDialog(){
+        this.form = {
+            id: null,
+            name: null
+        }
+        this.valid= true
+        this.dialog = true
     }
   }
 }
