@@ -12,7 +12,7 @@
                 <td style="width:80px" class="text-right">{{ item.count }}人</td>
               </tr>
             </tbody>
-            <v-btn fixed dark fab bottom right color="pink" class="bottom-nav-margin">
+            <v-btn fixed dark fab bottom right color="pink" class="bottom-nav-margin" @click="showDialog()">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
@@ -21,7 +21,7 @@
     </v-row>
     <v-dialog v-model="dialog" width="500" persistent>
       <v-card>
-        <v-form ref="form" v-model="valid" :lazy-validation="lazy">
+        <v-form ref="form" v-model="valid" lazy-validation>
           <v-card-title class="headline">活動</v-card-title>
 
           <v-card-text>
@@ -45,16 +45,16 @@
               </template>
               <v-date-picker v-model="form.date" @input="picker = false"></v-date-picker>
             </v-menu>
-            <v-btn outlined block color="info" @click="selectScore()">スコア管理</v-btn>
+            <v-btn outlined block color="info" @click="selectScore()" v-show="form.id">スコア管理</v-btn>
           </v-card-text>
 
           <v-divider></v-divider>
 
           <v-card-actions>
-            <v-btn outlined color="error" @click="deleteActivity()">削除</v-btn>
+            <v-btn outlined color="error" @click="deleteActivity()" v-show="form.id">削除</v-btn>
             <v-spacer></v-spacer>
             <v-btn outlined @click="dialog = false">キャンセル</v-btn>
-            <v-btn outlined color="success" @click="saveActivity()">保存</v-btn>
+            <v-btn outlined color="success" :disabled="!valid" @click="saveActivity()">保存</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -76,11 +76,11 @@ export default {
 			dialog: false,
 			year: null,
 			form: {
+        id: null,
 				date: null,
 				title: null
 			},
 			valid: true,
-			lazy: true,
 			nameRules: [
 				v => !!v || '名前を入力してください',
 				v =>
@@ -103,6 +103,7 @@ export default {
 		selectRow(item) {
 			this.targetItem = item
 			this.form = {
+        id: item.id,
 				date: item.date,
 				title: item.title
 			}
@@ -112,8 +113,8 @@ export default {
 			this.setActivityId(this.targetItem.id)
 			this.$router.push('/score')
 		},
-		deleteActivity() {
-			const res = api.deleteActivity(this.targetItem.id)
+		async deleteActivity() {
+			const res = await api.deleteActivity(this.targetItem.id)
 			if (res.status == 200) {
 				this.reload(this.year)
 				this.dialog = false
@@ -121,10 +122,18 @@ export default {
 				this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
 			}
 		},
-		saveActivity() {},
-		reload(year) {
+		async saveActivity() {
+      const res = await api.saveActivity(this.form)
+      if (res.status === 200 || res.status === 201) {
+        this.reload(this.year)
+        this.dialog = false
+      } else {
+        this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
+      }
+    },
+		async reload(year) {
 			this.year = year
-			const res = api.getActivityList(year)
+			const res = await api.getActivityList(year)
 
 			if (res.status == 200) {
 				// 正常
@@ -132,7 +141,17 @@ export default {
 			} else {
 				this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
 			}
-		}
+    },
+    showDialog(){
+        this.form = {
+            id: null,
+            date: null,
+            title: null
+        }
+        this.valid= true
+        // this.$refs.form.resetValidation()
+        this.dialog = true
+    }
 	}
 }
 </script>

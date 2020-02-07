@@ -76,8 +76,8 @@ export default {
       scoreList: 'score/scoreList'
     })
   },
-  created() {
-    this.getScoreListByActivityId(this.activityId)
+  async created() {
+    await this.getScoreListByActivityId(this.activityId)
     this.loadMemberList()
   },
   methods: {
@@ -85,8 +85,8 @@ export default {
       getScoreListByActivityId: 'score/findByActivityId',
       saveScoreList: 'score/save'
     }),
-    loadMemberList() {
-      const res = api.getMemberList()
+    async loadMemberList() {
+      const res = await api.getMemberList()
 
       if (res.status == 200) {
         // 正常
@@ -95,8 +95,8 @@ export default {
         this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
       }
     },
-    saveAttend() {
-      const res = api.attend(this.activityId, { memberList: this.memberList })
+    async saveAttend() {
+      const res = await api.attend(this.activityId, { memberList: this.memberList })
       if (res.status === 200) {
         this.saveScoreList(res.data)
       } else {

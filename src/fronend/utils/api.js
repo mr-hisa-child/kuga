@@ -12,19 +12,8 @@ const getMemberList = () => {
 }
 
 const getActivityList = (year) => {
-    // const teamId = localStorage.getItem('team')
-    // return get(`/team/${teamId}/activity?year=${year}`)
-    return {
-        status: 200,
-        data: [
-            {
-                id: '1234',
-                date: '2020-01-20',
-                title: '練習',
-                count: 5
-            }
-        ]
-    }
+    const teamId = localStorage.getItem('kuga-team')
+    return get(`/team/${teamId}/activity?year=${year}`)
 }
 
 const deleteActivity = (activityId) => {
@@ -50,90 +39,7 @@ const getScoreListByYear = (year) => {
 }
 
 const getScoreList = (activityId) => {
-    // const teamId = localStorage.getItem('team')
-    // return get(`/activity/${activityId}/score`)
-    return {
-        status: 200,
-        data: [
-            {
-                id: '1234',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12345',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-        ]
-    }
+    return get(`/activity/${activityId}/score`)
 }
 
 const increment = (scoreId, category) => {
@@ -154,6 +60,15 @@ const saveMember = (data) => {
     } else {
         const teamId = localStorage.getItem('kuga-team')
         return post(`/team/${teamId}/member`, data)
+    }
+}
+
+const saveActivity = (data) => {
+    if (data.id) {
+        return put(`/activity/${data.id}`, data)
+    } else {
+        const teamId = localStorage.getItem('kuga-team')
+        return post(`/team/${teamId}/activity`, data)
     }
 }
 
@@ -215,5 +130,6 @@ export default {
     attend,
     deleteActivity,
     getTeam,
-    getTeamList
+    getTeamList,
+    saveActivity
 }

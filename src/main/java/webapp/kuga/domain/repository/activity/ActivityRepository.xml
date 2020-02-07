@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="webapp.kuga.domain.repository.activity.ActivityRepository">
-    <sql id="activityColumns"> ${alias}.id,${alias}.team_id,${alias}.title,${alias}.year,${alias}.month,${alias}.day </sql>
+    <sql id="activityColumns"> ${alias}.id,${alias}.team_id AS teamId,${alias}.title,${alias}.year,${alias}.month,${alias}.day </sql>
 
     <insert id="insert">
         INSERT 

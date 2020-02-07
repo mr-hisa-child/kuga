@@ -18,13 +18,13 @@ public class Activity extends BaseEntity {
     private int day;
 
     public void setDate(String date) {
-        LocalDate d = DateUtil.parse(date, "yyyy/MM/dd");
+        LocalDate d = DateUtil.parse(date, "yyyy-MM-dd");
         this.year = d.getYear();
         this.month = d.getMonthValue();
         this.day = d.getDayOfMonth();
     }
 
     public String getDate() {
-        return DateUtil.format(LocalDate.of(this.year, this.month, this.day), "yyyy/MM/dd");
+        return DateUtil.format(LocalDate.of(this.year, this.month, this.day), "yyyy-MM-dd");
     }
 }
