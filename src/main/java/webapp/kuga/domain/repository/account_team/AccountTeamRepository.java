@@ -7,5 +7,7 @@ import webapp.kuga.domain.model.AccountTeam;
 @Mapper
 public interface AccountTeamRepository {
 
+    public AccountTeam find(String accountId, String teamId);
+
     public void insert(AccountTeam entity);
 }

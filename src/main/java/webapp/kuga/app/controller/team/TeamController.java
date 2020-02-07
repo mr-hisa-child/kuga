@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import webapp.kuga.app.security.LoginUser;
 import webapp.kuga.domain.model.Team;
-import webapp.kuga.domain.service.ActivityService;
-import webapp.kuga.domain.service.MemberService;
 import webapp.kuga.domain.service.TeamService;
 
 @RestController
@@ -29,12 +27,6 @@ public class TeamController {
 
     @Autowired
     private TeamService teamService;
-
-    @Autowired
-    private MemberService memberService;
-
-    @Autowired
-    private ActivityService activityService;
 
     @GetMapping
     public List<TeamResponseBody> findByLoginUser(@AuthenticationPrincipal LoginUser loginUser) {
@@ -47,6 +39,10 @@ public class TeamController {
     @PutMapping(path = "{id}")
     public ResponseEntity<?> update(@PathVariable String id, @RequestBody TeamRequestBody teamRequestBody,
             @AuthenticationPrincipal LoginUser loginUser) {
+
+        if (!teamService.isEnabled(loginUser.getAccountId(), id)) {
+            return ResponseEntity.badRequest().build();
+        }
 
         Team team = teamService.find(id);
         if (Objects.isNull(team)) {
@@ -76,8 +72,7 @@ public class TeamController {
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<?> remove(@PathVariable String id, @AuthenticationPrincipal LoginUser loginUser) {
-        Team team = teamService.find(id);
-        if (Objects.isNull(team)) {
+        if (!teamService.isEnabled(loginUser.getAccountId(), id)) {
             return ResponseEntity.badRequest().build();
         }
 

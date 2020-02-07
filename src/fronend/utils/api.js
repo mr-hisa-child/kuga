@@ -11,82 +11,17 @@ const createTeam = (data) => {
 }
 
 const getMemberList = () => {
-    // const teamId = localStorage.getItem('team')
-    // return get(`/team/${teamId}/member`)
-    return {
-        status: 200,
-        data: [
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-            {
-                id: '1234',
-                name: '小野'
-            },
-
-        ]
-    }
+    const teamId = localStorage.getItem('kuga-team')
+    return get(`/team/${teamId}/member`)
 }
 
-const getActivityList = () => {
-    // const teamId = localStorage.getItem('team')
-    // return get(`/team/${teamId}/activity`)
-    return {
-        status: 200,
-        data: [
-            {
-                id: '1234',
-                date: '2020/01/20',
-                title: '練習',
-                count: 5
-            }
-        ]
-    }
+const getActivityList = (year) => {
+    const teamId = localStorage.getItem('kuga-team')
+    return get(`/team/${teamId}/activity?year=${year}`)
+}
+
+const deleteActivity = (activityId) => {
+    return del(`/activity/${activityId}`)
 }
 
 const getScoreListByYear = (year) => {
@@ -108,90 +43,7 @@ const getScoreListByYear = (year) => {
 }
 
 const getScoreList = (activityId) => {
-    // const teamId = localStorage.getItem('team')
-    // return get(`/activity/${activityId}/score`)
-    return {
-        status: 200,
-        data: [
-            {
-                id: '1234',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12345',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-            {
-                id: '12346',
-                name: '小野',
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-        ]
-    }
+    return get(`/activity/${activityId}/score`)
 }
 
 const increment = (scoreId, category) => {
@@ -210,12 +62,38 @@ const saveMember = (data) => {
     if (data.id) {
         return put(`/member/${data.id}`, data)
     } else {
-        return post(`/member`, data)
+        const teamId = localStorage.getItem('kuga-team')
+        return post(`/team/${teamId}/member`, data)
+    }
+}
+
+const saveActivity = (data) => {
+    if (data.id) {
+        return put(`/activity/${data.id}`, data)
+    } else {
+        const teamId = localStorage.getItem('kuga-team')
+        return post(`/team/${teamId}/activity`, data)
     }
 }
 
 const attend = (activityId, data) => {
     return put(`/activity/${activityId}/attend`, data)
+}
+
+const getTeam = () => {
+    const teamId = localStorage.getItem('kuga-team')
+    return get(`/team/${teamId}`)
+    // return {
+    //     status: 200,
+    //     data: {
+    //         teamId: 1,
+    //         teamName: "FC.AVANZARE"
+    //     }
+    // }
+}
+
+const getTeamList = () => {
+    return get(`/team`)
 }
 
 const post = async (path, params, option) => {
@@ -254,5 +132,9 @@ export default {
     deleteMember,
     saveMember,
     getScoreListByYear,
-    attend
+    attend,
+    deleteActivity,
+    getTeam,
+    getTeamList,
+    saveActivity
 }

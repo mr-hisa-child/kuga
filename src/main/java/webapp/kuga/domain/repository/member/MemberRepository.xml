@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="webapp.kuga.domain.repository.member.MemberRepository">
-    <sql id="memberColumns"> ${alias}.id,${alias}.name,${alias}.no </sql>
+    <sql id="memberColumns"> ${alias}.id,${alias}.name,${alias}.no,${alias}.team_id AS teamId </sql>
 
     <insert id="insert">
         INSERT 
@@ -28,6 +28,13 @@
             WHERE
                 id = #{id}
     </update>
+    <delete id="delete">
+        DELETE
+            FROM
+                member
+            WHERE
+                id = #{id}
+    </delete>
     <select id="select" resultType="webapp.kuga.domain.model.Member">
         SELECT
         <include refid="memberColumns">

@@ -14,5 +14,16 @@
                 #{teamId}
             )
     </insert>
+
+    <select id="find" resultType="webapp.kuga.domain.model.AccountTeam">
+        SELECT
+                account_id,
+                team_id
+        FROM 
+                account_team a
+            WHERE 
+                a.account_id = #{accountId}
+                AND a.team_id = #{teamId}
+    </select>
    
 </mapper>

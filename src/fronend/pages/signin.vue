@@ -53,7 +53,7 @@ export default {
         email: this.email,
         password: this.password
       }
-      const res = api.signin(data)
+      const res = await api.signin(data)
 
       if (res.status == 200) {
         // 正常

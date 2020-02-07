@@ -2,6 +2,8 @@ package webapp.kuga.domain.service;
 
 import java.util.List;
 
+import com.google.common.base.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +40,9 @@ public class TeamService {
 
     public List<Team> findByAccountId(String accountId) {
         return teamRepository.selectByAccountId(accountId);
+    }
+
+    public boolean isEnabled(String accountId, String teamId) {
+        return Optional.fromNullable(accountTeamRepository.find(accountId, teamId)).isPresent();
     }
 }
