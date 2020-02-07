@@ -2,6 +2,10 @@ const signin = (data) => {
     return post('/signin', data)
 }
 
+const signup = (data) => {
+    return post('/signup', data)
+}
+
 const createTeam = (data) => {
     return post('/team', data)
 }
@@ -240,6 +244,7 @@ const get = async (path, option) => {
 
 export default {
     signin,
+    signup,
     createTeam,
     getMemberList,
     getActivityList,
