@@ -50,8 +50,8 @@ export default {
     }
   },
   methods: {
-    signup() {
-      const res = api.signup(`/signup`, this.form)
+    async signup() {
+      const res = await api.signup(this.form)
       if (res.status === 200) {
         this.$router.push('/signin')
       } else {

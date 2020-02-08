@@ -2,6 +2,10 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
     mode: 'spa',
+    router: {
+        mode: 'history',
+        middleware: ['filter']
+    },
     /*
     ** Headers of the page
     */

@@ -3,7 +3,7 @@
     <template v-slot:default>
       <tbody>
         <tr v-for="item in scoreList" :key="item.id">
-          <td class="title">{{ item.name }}</td>
+          <td class="title">{{ item.memberName }}</td>
           <td class="text-center" style="width:88px" v-if="editable">
             <v-btn
               class="mx-2"

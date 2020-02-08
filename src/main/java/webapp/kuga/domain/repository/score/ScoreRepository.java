@@ -8,13 +8,15 @@ import webapp.kuga.domain.model.Score;
 
 @Mapper
 public interface ScoreRepository {
-    public Score select(String id);
+	public Score select(String id);
 
-    public void insert(Score entity);
+	public void insert(Score entity);
 
-    public void update(Score entity);
+	public void update(Score entity);
 
-    public void delete(String id);
+	public void delete(String id);
 
-    public List<Score> selectByActivityId(String activityId);
+	public List<Score> selectByActivityId(String activityId);
+
+	public List<Score> selectWithMemberByActivityId(String activity);
 }

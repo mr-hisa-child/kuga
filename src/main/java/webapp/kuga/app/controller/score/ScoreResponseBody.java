@@ -1,27 +1,33 @@
 package webapp.kuga.app.controller.score;
 
+import java.util.Objects;
+
 import webapp.kuga.domain.model.Score;
 
 public class ScoreResponseBody {
-    private Score score;
+	private Score score;
 
-    public ScoreResponseBody(Score score) {
-        this.score = score;
-    }
+	public ScoreResponseBody(Score score) {
+		this.score = score;
+	}
 
-    public String getId() {
-        return this.score.getId();
-    }
+	public String getId() {
+		return this.score.getId();
+	}
 
-    public int getGoal() {
-        return this.score.getGoal();
-    }
+	public String getMemberName() {
+		return Objects.nonNull(this.score.getMember()) ? this.score.getMember().getName() : null;
+	}
 
-    public int getAssist() {
-        return this.score.getAssist();
-    }
+	public int getGoal() {
+		return this.score.getGoal();
+	}
 
-    public int getWin() {
-        return this.score.getWin();
-    }
+	public int getAssist() {
+		return this.score.getAssist();
+	}
+
+	public int getWin() {
+		return this.score.getWin();
+	}
 }

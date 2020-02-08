@@ -96,7 +96,9 @@ export default {
       }
     },
     async saveAttend() {
-      const res = await api.attend(this.activityId, { memberList: this.memberList })
+      const res = await api.attend(this.activityId, {
+        memberList: this.memberList.map(member => member.id)
+      })
       if (res.status === 200) {
         this.saveScoreList(res.data)
       } else {

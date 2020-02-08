@@ -3,71 +3,77 @@ package webapp.kuga.domain.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Lists;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
+
+import webapp.kuga.domain.model.Activity;
 import webapp.kuga.domain.model.Score;
 import webapp.kuga.domain.repository.score.ScoreRepository;
 
 @Service
 public class ScoreService {
-    @Autowired
-    private ScoreRepository scoreRepository;
+	@Autowired
+	private ScoreRepository scoreRepository;
 
-    public Score find(String id) {
-        return scoreRepository.select(id);
-    }
+	public Score find(String id) {
+		return scoreRepository.select(id);
+	}
 
-    public List<Score> findByActivityId(String activityId) {
-        return scoreRepository.selectByActivityId(activityId);
-    }
+	public List<Score> findByActivityId(String activityId) {
+		return scoreRepository.selectByActivityId(activityId);
+	}
 
-    public List<Score> findByTeamIdAndYear(String teamId, int year) {
-        return null;
-    }
+	public List<Score> findWithMemberByActivityId(String activityId) {
+		return scoreRepository.selectWithMemberByActivityId(activityId);
+	}
 
-    public void create(Score score) {
-        scoreRepository.insert(score);
-    }
+	public List<Score> findByTeamIdAndYear(String teamId, int year) {
+		return null;
+	}
 
-    public void update(Score score) {
-        scoreRepository.update(score);
-    }
+	public void create(Score score) {
+		scoreRepository.insert(score);
+	}
 
-    public void remove(String id) {
-        scoreRepository.delete(id);
-    }
+	public void update(Score score) {
+		scoreRepository.update(score);
+	}
 
-    public List<Score> attend(String activityId, List<String> attendMemberList) {
-        List<Score> scoreList = findByActivityId(activityId)
-                .stream()
-                .collect(Collectors.toList());
+	public void remove(String id) {
+		scoreRepository.delete(id);
+	}
 
-        List<Score> newScoreList = Lists.newArrayList();
-        List<String> memberList = Lists.newArrayList();
+	public List<Score> attend(Activity activity, List<String> attendMemberList) {
+		List<Score> scoreList = findByActivityId(activity.getId())
+				.stream()
+				.collect(Collectors.toList());
 
-        scoreList.parallelStream()
-                .forEach(score -> {
-                    memberList.add(score.getMemberId());
-                    if (attendMemberList.contains(score.getMemberId())) {
-                        newScoreList.add(score);
-                    } else {
-                        remove(score.getId());
-                    }
-                });
+		List<Score> newScoreList = Lists.newArrayList();
+		List<String> memberList = Lists.newArrayList();
 
-        attendMemberList.parallelStream()
-                .filter(memberId -> !memberList.contains(memberId))
-                .forEach(memberId -> {
-                    Score score = new Score();
-                    score.setActivityId(activityId);
-                    score.setMemberId(memberId);
-                    create(score);
-                    newScoreList.add(score);
-                });
+		scoreList.parallelStream()
+				.forEach(score -> {
+					memberList.add(score.getMemberId());
+					if (attendMemberList.contains(score.getMemberId())) {
+						newScoreList.add(score);
+					} else {
+						remove(score.getId());
+					}
+				});
 
-        return newScoreList;
-    }
+		attendMemberList.parallelStream()
+				.filter(memberId -> !memberList.contains(memberId))
+				.forEach(memberId -> {
+					Score score = new Score();
+					score.setActivityId(activity.getId());
+					score.setMemberId(memberId);
+					score.setTeamId(activity.getTeamId());
+					create(score);
+					newScoreList.add(score);
+				});
+
+		return newScoreList;
+	}
 }

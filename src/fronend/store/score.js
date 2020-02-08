@@ -13,8 +13,8 @@ export const mutations = {
 }
 
 export const actions = {
-    findByActivityId({ commit }, activityId) {
-        const res = api.getScoreList(activityId)
+    async findByActivityId({ commit }, activityId) {
+        const res = await api.getScoreList(activityId)
         if (res.status === 200) {
             commit('save', res.data)
         } else {
