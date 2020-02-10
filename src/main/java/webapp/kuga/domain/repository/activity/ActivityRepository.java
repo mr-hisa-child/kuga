@@ -8,13 +8,15 @@ import webapp.kuga.domain.model.Activity;
 
 @Mapper
 public interface ActivityRepository {
-    public Activity select(String id);
+	public Activity select(String id);
 
-    public void insert(Activity entity);
+	public void insert(Activity entity);
 
-    public void update(Activity entity);
+	public void update(Activity entity);
 
-    public void delete(String id);
+	public void delete(String id);
 
-    public List<Activity> selectByTeamId(String teamId);
+	public List<Activity> selectByTeamId(String teamId);
+
+	public List<Activity> selectByTeamIdAndYear(String teamId, int year);
 }

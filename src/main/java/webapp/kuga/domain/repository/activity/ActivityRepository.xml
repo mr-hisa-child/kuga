@@ -55,4 +55,16 @@
             WHERE 
                 a.team_id = #{teamId}
     </select>
+    
+    <select id="selectByTeamIdAndYear" resultType="webapp.kuga.domain.model.Activity">
+        SELECT
+        <include refid="activityColumns">
+            <property name="alias" value="a" />
+        </include>
+            FROM 
+                activity a
+            WHERE 
+                a.team_id = #{teamId}
+                AND a.year = #{year}
+    </select>
 </mapper>

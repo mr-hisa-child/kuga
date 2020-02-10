@@ -3,9 +3,9 @@
 <mapper namespace="webapp.kuga.domain.repository.score.ScoreRepository">
     <sql id="scoreColumns"> 
     ${alias}.id,
-    ${alias}.team_id,
-    ${alias}.activity_id,
-    ${alias}.member_id,
+    ${alias}.team_id as teamId,
+    ${alias}.activity_id as activityId,
+    ${alias}.member_id as memberId,
     ${alias}.goal,
     ${alias}.assist,
     ${alias}.win 
@@ -126,6 +126,35 @@
                 		a.member_id = m.id
             WHERE 
                 a.activity_id = #{activityId}
+    </select>
+    
+    <select id="selectWithMemberByYear" resultType="webapp.kuga.domain.dto.Record">
+        SELECT
+        	m.name AS memberName,
+        	COUNT(a.id) AS attend,
+        	SUM(a.goal) AS goal,
+        	SUM(a.assist) AS assist,
+        	SUM(a.win) AS win
+        	FROM 
+        		member m
+                LEFT OUTER JOIN
+                		score a
+                	ON
+                		a.member_id = m.id
+                		AND EXISTS (
+		            		SELECT 
+		                			*
+		                		FROM 
+		                			activity a1 
+		                		WHERE 
+		                			a.activity_id = a1.id
+		                			AND a1.year = #{year} 
+		                			AND a1.team_id = #{teamId}
+		            	)
+			WHERE
+				m.team_id = #{teamId}
+			GROUP BY
+				m.name
     </select>
     
 </mapper>

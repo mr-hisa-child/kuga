@@ -12,7 +12,7 @@
               dark
               small
               color="error"
-              @click="increment(item.id,category)"
+              @click="decrement({scoreId:item.id,category:category})"
             >
               <v-icon dark>mdi-minus</v-icon>
             </v-btn>
@@ -26,7 +26,7 @@
               dark
               small
               color="success"
-              @click="decrement(item.id,category)"
+              @click="increment({scoreId:item.id,category:category})"
             >
               <v-icon dark>mdi-plus</v-icon>
             </v-btn>

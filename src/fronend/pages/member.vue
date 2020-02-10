@@ -7,7 +7,16 @@
             <td class="title">{{ item.name }}</td>
           </tr>
         </tbody>
-        <v-btn fixed dark fab bottom right color="pink" class="bottom-nav-margin" @click="showDialog()">
+        <v-btn
+          fixed
+          dark
+          fab
+          bottom
+          right
+          color="red"
+          class="bottom-nav-margin"
+          @click="showDialog()"
+        >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
@@ -84,7 +93,6 @@ export default {
       }
     },
     async saveMember() {
-
       const res = await api.saveMember(this.form)
       if (res.status === 200 || res.status === 201) {
         this.load()
@@ -93,13 +101,13 @@ export default {
         this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
       }
     },
-    showDialog(){
-        this.form = {
-            id: null,
-            name: null
-        }
-        this.valid= true
-        this.dialog = true
+    showDialog() {
+      this.form = {
+        id: null,
+        name: null
+      }
+      this.valid = true
+      this.dialog = true
     }
   }
 }

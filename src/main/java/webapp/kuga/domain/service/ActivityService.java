@@ -10,26 +10,30 @@ import webapp.kuga.domain.repository.activity.ActivityRepository;
 
 @Service
 public class ActivityService {
-    @Autowired
-    private ActivityRepository activityRepository;
+	@Autowired
+	private ActivityRepository activityRepository;
 
-    public Activity find(String id) {
-        return activityRepository.select(id);
-    }
+	public Activity find(String id) {
+		return activityRepository.select(id);
+	}
 
-    public List<Activity> findByTeamId(String teamId) {
-        return activityRepository.selectByTeamId(teamId);
-    }
+	public List<Activity> findByTeamId(String teamId) {
+		return activityRepository.selectByTeamId(teamId);
+	}
 
-    public void create(Activity activity) {
-        activityRepository.insert(activity);
-    }
+	public List<Activity> findByTeamIdAndYear(String teamId, int year) {
+		return activityRepository.selectByTeamIdAndYear(teamId, year);
+	}
 
-    public void update(Activity activity) {
-        activityRepository.update(activity);
-    }
+	public void create(Activity activity) {
+		activityRepository.insert(activity);
+	}
 
-    public void remove(String id) {
-        activityRepository.delete(id);
-    }
+	public void update(Activity activity) {
+		activityRepository.update(activity);
+	}
+
+	public void remove(String id) {
+		activityRepository.delete(id);
+	}
 }

@@ -25,21 +25,8 @@ const deleteActivity = (activityId) => {
 }
 
 const getScoreListByYear = (year) => {
-    // const teamId = localStorage.getItem('team')
-    // return get(`/team/${teamId}/score?year=${year}`)
-    return {
-        status: 200,
-        data: [
-            {
-                id: '1234',
-                name: '小野',
-                attend: 2,
-                goal: 5,
-                assist: 4,
-                win: 2
-            },
-        ]
-    }
+    const teamId = localStorage.getItem('kuga-team')
+    return get(`/team/${teamId}/score?year=${year}`)
 }
 
 const getScoreList = (activityId) => {

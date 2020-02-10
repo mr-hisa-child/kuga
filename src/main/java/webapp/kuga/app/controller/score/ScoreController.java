@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.collect.Lists;
 
 import webapp.kuga.app.security.LoginUser;
+import webapp.kuga.domain.dto.Record;
 import webapp.kuga.domain.model.Activity;
 import webapp.kuga.domain.model.Score;
 import webapp.kuga.domain.service.ActivityService;
@@ -38,17 +39,14 @@ public class ScoreController {
 	private TeamService teamService;
 
 	@GetMapping(path = "team/{teamId}/score")
-	public List<ScoreResponseBody> findByTeamIdAndYear(@PathVariable String teamId, @RequestParam("year") int year,
+	public List<Record> findByTeamIdAndYear(@PathVariable String teamId, @RequestParam("year") int year,
 			@AuthenticationPrincipal LoginUser loginUser) {
 
 		if (!teamService.isEnabled(loginUser.getAccountId(), teamId)) {
 			return Lists.newArrayList();
 		}
 
-		return scoreService.findByTeamIdAndYear(teamId, year)
-				.stream()
-				.map(score -> new ScoreResponseBody(score))
-				.collect(Collectors.toList());
+		return scoreService.findByTeamIdAndYear(teamId, year);
 	}
 
 	@GetMapping(path = "activity/{activityId}/score")

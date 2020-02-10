@@ -1,18 +1,28 @@
 <template>
   <div>
     <YearFilter @change-year="reload" />
+    <v-alert type="error" dense outlined v-show="nodata">活動がありません</v-alert>
     <v-row>
       <v-col>
         <v-simple-table class="bottom-nav-margin">
           <template v-slot:default>
             <tbody>
-              <tr v-for="item in items" :key="item.title" @click="selectRow(item)">
+              <tr v-for="item in items" :key="item.id" @click="selectRow(item)">
                 <td style="width:100px">{{ item.date | formatDate}}</td>
                 <td>{{ item.title }}</td>
                 <td style="width:80px" class="text-right">{{ item.count }}人</td>
               </tr>
             </tbody>
-            <v-btn fixed dark fab bottom right color="pink" class="bottom-nav-margin" @click="showDialog()">
+            <v-btn
+              fixed
+              dark
+              fab
+              bottom
+              right
+              color="red"
+              class="bottom-nav-margin"
+              @click="showDialog()"
+            >
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
@@ -66,63 +76,62 @@ import YearFilter from '@/components/YearFilter'
 import { mapActions } from 'vuex'
 import api from '@/utils/api'
 export default {
-	components: {
-		YearFilter
-	},
-	data() {
-		return {
-			items: null,
-			targetItem: {},
-			dialog: false,
-			year: null,
-			form: {
+  components: {
+    YearFilter
+  },
+  data() {
+    return {
+      items: [],
+      targetItem: {},
+      dialog: false,
+      year: null,
+      form: {
         id: null,
-				date: null,
-				title: null
-			},
-			valid: true,
-			nameRules: [
-				v => !!v || '名前を入力してください',
-				v =>
-					(v && v.length <= 20) ||
-					'名前は20文字以内で入力してください'
-			],
-			picker: false
-		}
-	},
-    filters:{
-        formatDate: (date) => {
-            const splitDate = date.split('-')
-            return `${splitDate[1]}/${splitDate[2]}`
-        }
-    },
-	methods: {
-		...mapActions({
-			setActivityId: 'activity/setId'
-		}),
-		selectRow(item) {
-			this.targetItem = item
-			this.form = {
+        date: null,
+        title: null
+      },
+      valid: true,
+      nameRules: [
+        v => !!v || '名前を入力してください',
+        v => (v && v.length <= 20) || '名前は20文字以内で入力してください'
+      ],
+      picker: false,
+      nodata: false
+    }
+  },
+  filters: {
+    formatDate: date => {
+      const splitDate = date.split('-')
+      return `${splitDate[1]}/${splitDate[2]}`
+    }
+  },
+  methods: {
+    ...mapActions({
+      setActivityId: 'activity/setId'
+    }),
+    selectRow(item) {
+      this.targetItem = item
+      this.form = {
         id: item.id,
-				date: item.date,
-				title: item.title
-			}
-			this.dialog = true
-		},
-		selectScore() {
-			this.setActivityId(this.targetItem.id)
-			this.$router.push('/score')
-		},
-		async deleteActivity() {
-			const res = await api.deleteActivity(this.targetItem.id)
-			if (res.status == 200) {
-				this.reload(this.year)
-				this.dialog = false
-			} else {
-				this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
-			}
-		},
-		async saveActivity() {
+        date: item.date,
+        title: item.title
+      }
+      this.dialog = true
+    },
+    selectScore() {
+      this.setActivityId(this.targetItem.id)
+      this.$router.push('/score')
+    },
+    async deleteActivity() {
+      const res = await api.deleteActivity(this.targetItem.id)
+      if (res.status == 200) {
+        this.reload(this.year)
+        this.dialog = false
+      } else {
+        this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
+      }
+    },
+    async saveActivity() {
       const res = await api.saveActivity(this.form)
       if (res.status === 200 || res.status === 201) {
         this.reload(this.year)
@@ -131,27 +140,28 @@ export default {
         this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
       }
     },
-		async reload(year) {
-			this.year = year
-			const res = await api.getActivityList(year)
+    async reload(year) {
+      this.year = year
+      const res = await api.getActivityList(year)
 
-			if (res.status == 200) {
-				// 正常
-				this.items = res.data
-			} else {
-				this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
-			}
+      if (res.status == 200) {
+        // 正常
+        this.items = res.data
+        this.nodata = this.items.length === 0
+      } else {
+        this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
+      }
     },
-    showDialog(){
-        this.form = {
-            id: null,
-            date: null,
-            title: null
-        }
-        this.valid= true
-        // this.$refs.form.resetValidation()
-        this.dialog = true
+    showDialog() {
+      this.form = {
+        id: null,
+        date: null,
+        title: null
+      }
+      this.valid = true
+      // this.$refs.form.resetValidation()
+      this.dialog = true
     }
-	}
+  }
 }
 </script>

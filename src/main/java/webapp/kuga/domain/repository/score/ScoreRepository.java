@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import webapp.kuga.domain.dto.Record;
 import webapp.kuga.domain.model.Score;
 
 @Mapper
@@ -19,4 +20,6 @@ public interface ScoreRepository {
 	public List<Score> selectByActivityId(String activityId);
 
 	public List<Score> selectWithMemberByActivityId(String activity);
+
+	public List<Record> selectWithMemberByYear(String teamId, int year);
 }

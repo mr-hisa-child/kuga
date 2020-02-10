@@ -25,99 +25,99 @@ import webapp.kuga.domain.service.TeamService;
 @RestController
 public class ActivityController {
 
-    @Autowired
-    private TeamService teamService;
+	@Autowired
+	private TeamService teamService;
 
-    @Autowired
-    private ActivityService activityService;
+	@Autowired
+	private ActivityService activityService;
 
-    @GetMapping(path = "team/{teamId}/activity")
-    public ResponseEntity<List<ActivityResponseBody>> findAll(@PathVariable String teamId,
-            @RequestParam("year") int year,
-            @AuthenticationPrincipal LoginUser loginUser) {
+	@GetMapping(path = "team/{teamId}/activity")
+	public ResponseEntity<List<ActivityResponseBody>> findAll(@PathVariable String teamId,
+			@RequestParam("year") int year,
+			@AuthenticationPrincipal LoginUser loginUser) {
 
-        if (!teamService.isEnabled(loginUser.getAccountId(), teamId)) {
-            return ResponseEntity.badRequest().build();
-        }
+		if (!teamService.isEnabled(loginUser.getAccountId(), teamId)) {
+			return ResponseEntity.badRequest().build();
+		}
 
-        return ResponseEntity.ok(activityService.findByTeamId(teamId)
-                .stream()
-                .map(activity -> new ActivityResponseBody(activity))
-                .collect(Collectors.toList()));
-    }
+		return ResponseEntity.ok(activityService.findByTeamIdAndYear(teamId, year)
+				.stream()
+				.map(activity -> new ActivityResponseBody(activity))
+				.collect(Collectors.toList()));
+	}
 
-    @GetMapping(path = "activity/{id}")
-    public ResponseEntity<ActivityResponseBody> find(@PathVariable String id,
-            @AuthenticationPrincipal LoginUser loginUser) {
+	@GetMapping(path = "activity/{id}")
+	public ResponseEntity<ActivityResponseBody> find(@PathVariable String id,
+			@AuthenticationPrincipal LoginUser loginUser) {
 
-        Activity activity = activityService.find(id);
-        if (Objects.isNull(activity)) {
-            return ResponseEntity.notFound().build();
-        }
+		Activity activity = activityService.find(id);
+		if (Objects.isNull(activity)) {
+			return ResponseEntity.notFound().build();
+		}
 
-        if (!teamService.isEnabled(loginUser.getAccountId(), activity.getTeamId())) {
-            return ResponseEntity.notFound().build();
-        }
+		if (!teamService.isEnabled(loginUser.getAccountId(), activity.getTeamId())) {
+			return ResponseEntity.notFound().build();
+		}
 
-        return ResponseEntity.ok(new ActivityResponseBody(activity));
-    }
+		return ResponseEntity.ok(new ActivityResponseBody(activity));
+	}
 
-    @PutMapping(path = "activity/{id}")
-    public ResponseEntity<?> update(@PathVariable String id,
-            @RequestBody ActivityRequestBody requestBody,
-            @AuthenticationPrincipal LoginUser loginUser) {
+	@PutMapping(path = "activity/{id}")
+	public ResponseEntity<?> update(@PathVariable String id,
+			@RequestBody ActivityRequestBody requestBody,
+			@AuthenticationPrincipal LoginUser loginUser) {
 
-        Activity activity = activityService.find(id);
-        if (Objects.isNull(activity)) {
-            return ResponseEntity.badRequest().build();
-        }
+		Activity activity = activityService.find(id);
+		if (Objects.isNull(activity)) {
+			return ResponseEntity.badRequest().build();
+		}
 
-        if (!teamService.isEnabled(loginUser.getAccountId(), activity.getTeamId())) {
-            return ResponseEntity.badRequest().build();
-        }
+		if (!teamService.isEnabled(loginUser.getAccountId(), activity.getTeamId())) {
+			return ResponseEntity.badRequest().build();
+		}
 
-        activity.setTitle(requestBody.getTitle());
-        activity.setDate(requestBody.getDate());
+		activity.setTitle(requestBody.getTitle());
+		activity.setDate(requestBody.getDate());
 
-        activityService.update(activity);
+		activityService.update(activity);
 
-        return ResponseEntity.ok().build();
-    }
+		return ResponseEntity.ok().build();
+	}
 
-    @DeleteMapping(path = "activity/{id}")
-    public ResponseEntity<?> remove(@PathVariable String id,
-            @AuthenticationPrincipal LoginUser loginUser) {
+	@DeleteMapping(path = "activity/{id}")
+	public ResponseEntity<?> remove(@PathVariable String id,
+			@AuthenticationPrincipal LoginUser loginUser) {
 
-        Activity activity = activityService.find(id);
-        if (Objects.isNull(activity)) {
-            return ResponseEntity.badRequest().build();
-        }
+		Activity activity = activityService.find(id);
+		if (Objects.isNull(activity)) {
+			return ResponseEntity.badRequest().build();
+		}
 
-        if (!teamService.isEnabled(loginUser.getAccountId(), activity.getTeamId())) {
-            return ResponseEntity.badRequest().build();
-        }
+		if (!teamService.isEnabled(loginUser.getAccountId(), activity.getTeamId())) {
+			return ResponseEntity.badRequest().build();
+		}
 
-        activityService.remove(id);
+		activityService.remove(id);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
 
-    @PostMapping(path = "team/{teamId}/activity")
-    public ResponseEntity<?> addActivity(@PathVariable String teamId, @RequestBody ActivityRequestBody requestBody,
-            @AuthenticationPrincipal LoginUser loginUser) {
-        if (!teamService.isEnabled(loginUser.getAccountId(), teamId)) {
-            return ResponseEntity.badRequest().build();
-        }
+	@PostMapping(path = "team/{teamId}/activity")
+	public ResponseEntity<?> addActivity(@PathVariable String teamId, @RequestBody ActivityRequestBody requestBody,
+			@AuthenticationPrincipal LoginUser loginUser) {
+		if (!teamService.isEnabled(loginUser.getAccountId(), teamId)) {
+			return ResponseEntity.badRequest().build();
+		}
 
-        Activity activity = new Activity();
+		Activity activity = new Activity();
 
-        activity.setTeamId(teamId);
-        activity.setTitle(requestBody.getTitle());
-        activity.setDate(requestBody.getDate());
+		activity.setTeamId(teamId);
+		activity.setTitle(requestBody.getTitle());
+		activity.setDate(requestBody.getDate());
 
-        activityService.create(activity);
+		activityService.create(activity);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
 
 }

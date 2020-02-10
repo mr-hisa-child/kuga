@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 
+import webapp.kuga.domain.dto.Record;
 import webapp.kuga.domain.model.Activity;
 import webapp.kuga.domain.model.Score;
 import webapp.kuga.domain.repository.score.ScoreRepository;
@@ -29,8 +30,8 @@ public class ScoreService {
 		return scoreRepository.selectWithMemberByActivityId(activityId);
 	}
 
-	public List<Score> findByTeamIdAndYear(String teamId, int year) {
-		return null;
+	public List<Record> findByTeamIdAndYear(String teamId, int year) {
+		return scoreRepository.selectWithMemberByYear(teamId, year);
 	}
 
 	public void create(Score score) {

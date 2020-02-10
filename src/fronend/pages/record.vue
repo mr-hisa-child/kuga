@@ -32,22 +32,25 @@ import ScoreList from '@/components/ScoreList'
 import YearFilter from '@/components/YearFilter'
 import { mapGetters, mapActions } from 'vuex'
 export default {
-	components: {
-		ScoreList,
-		YearFilter
-	},
-	data() {
-		return {
-			tab: null
-		}
-	},
-	methods: {
-		...mapActions({
-			getScoreListByYear: 'score/findByYear'
-		}),
-		reload(year) {
-			this.getScoreListByYear(year)
-		}
-	}
+  components: {
+    ScoreList,
+    YearFilter
+  },
+  data() {
+    return {
+      tab: null
+    }
+  },
+  //   created() {
+  //     this.reload(2020)
+  //   },
+  methods: {
+    ...mapActions({
+      getScoreListByYear: 'score/findByYear'
+    }),
+    reload(year) {
+      this.getScoreListByYear(year)
+    }
+  }
 }
 </script>
