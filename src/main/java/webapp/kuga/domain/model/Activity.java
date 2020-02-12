@@ -3,6 +3,12 @@ package webapp.kuga.domain.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,12 +17,21 @@ import webapp.kuga.util.DateUtil;
 @Getter
 @Setter
 @ToString
+@Entity
+@Table
 public class Activity extends BaseEntity {
+	@Column(name = "team_id")
 	private String teamId;
+	@Column
 	private String title;
+	@Column
 	private int year;
+	@Column
 	private int month;
+	@Column
 	private int day;
+	@OneToMany
+	@JoinColumn(name = "activity_id")
 	private List<Score> scoreList;
 
 	public void setDate(String date) {

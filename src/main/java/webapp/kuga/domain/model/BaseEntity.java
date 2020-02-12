@@ -1,19 +1,22 @@
 package webapp.kuga.domain.model;
 
-import java.util.Date;
-import java.util.UUID;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@MappedSuperclass
 public abstract class BaseEntity {
-    private String id;
-    private Date createDt;
-    private Date updateDt;
-
-    public BaseEntity() {
-        this.id = UUID.randomUUID().toString();
-    }
+	@Id
+	@GenericGenerator(name = "UuidGenerator", strategy = "webapp.kuga.domain.model.UuidGenerator")
+	@GeneratedValue(generator = "UuidGenerator")
+	private String id;
+//    private Date createDt;
+//    private Date updateDt;
 }
