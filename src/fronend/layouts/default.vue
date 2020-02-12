@@ -8,6 +8,13 @@
     <v-content>
       <v-container>
         <nuxt />
+        <v-overlay :value="overlay">
+          <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
+        <v-snackbar v-model="snackbar" bottom :color="color" :timeout="timeout" right>
+          {{ message }}
+          <v-btn dark text @click="snackbar = false">Close</v-btn>
+        </v-snackbar>
       </v-container>
     </v-content>
 
@@ -37,29 +44,47 @@
 
 <script>
 import api from '@/utils/api'
-import { mapActions,mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
-	data() {
-		return {
-			title: 'れこった',
-			activeBtn: 1,
-			teamName: null
-		}
-	},
-    computed: {
+  data() {
+    return {
+      title: 'れこった',
+      activeBtn: 1,
+      teamName: null,
+      overlay: false,
+      snackbar: false,
+      color: null,
+      timeout: 3000,
+      message: null
+    }
+  },
+  computed: {
     ...mapGetters({
-      activeTeam: 'team/activeTeam',
+      activeTeam: 'team/activeTeam'
     })
   },
 
-	async created() {
-		await this.getTeam()
-        this.teamName = this.activeTeam.name
-	},
-    methods: {
-        ...mapActions({
-			getTeam: 'team/getTeam'
-		}),
+  async created() {
+    await this.getTeam()
+    this.teamName = this.activeTeam.name
+
+    this.$nuxt.$on('loading', this.loading)
+    this.$nuxt.$on('showMessage', this.showMessage)
+  },
+  methods: {
+    ...mapActions({
+      getTeam: 'team/getTeam'
+    }),
+    loading(isLoading) {
+      this.overlay = isLoading
+    },
+    showMessage(message, color, timeout) {
+      console.log('hoge')
+      this.message = message
+      this.color = color
+      this.timeout = timeout
+      this.snackbar = true
     }
+  }
 }
 </script>

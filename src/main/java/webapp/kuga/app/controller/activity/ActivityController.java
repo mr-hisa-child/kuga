@@ -1,5 +1,6 @@
 package webapp.kuga.app.controller.activity;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -43,6 +44,7 @@ public class ActivityController {
 		return ResponseEntity.ok(activityService.findByTeamIdAndYear(teamId, year)
 				.stream()
 				.map(activity -> new ActivityResponseBody(activity))
+				.sorted(Comparator.comparing(ActivityResponseBody::getDate).reversed())
 				.collect(Collectors.toList()));
 	}
 

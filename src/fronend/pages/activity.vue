@@ -61,10 +61,22 @@
           <v-divider></v-divider>
 
           <v-card-actions>
-            <v-btn outlined color="error" @click="deleteActivity()" v-show="form.id">削除</v-btn>
+            <v-btn
+              outlined
+              color="error"
+              @click="deleteActivity()"
+              :loading="delLoading"
+              v-show="form.id"
+            >削除</v-btn>
             <v-spacer></v-spacer>
             <v-btn outlined @click="dialog = false">キャンセル</v-btn>
-            <v-btn outlined color="success" :disabled="!valid" @click="saveActivity()">保存</v-btn>
+            <v-btn
+              outlined
+              color="success"
+              :disabled="!valid"
+              :loading="saveLoading"
+              @click="saveActivity()"
+            >保存</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -96,7 +108,9 @@ export default {
         v => (v && v.length <= 20) || '名前は20文字以内で入力してください'
       ],
       picker: false,
-      nodata: false
+      nodata: false,
+      saveLoading: false,
+      delLoading: false
     }
   },
   filters: {
@@ -123,6 +137,7 @@ export default {
       this.$router.push('/score')
     },
     async deleteActivity() {
+      this.delLoading = true
       const res = await api.deleteActivity(this.targetItem.id)
       if (res.status == 200) {
         this.reload(this.year)
@@ -130,8 +145,10 @@ export default {
       } else {
         this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
       }
+      this.delLoading = false
     },
     async saveActivity() {
+      this.saveLoading = true
       const res = await api.saveActivity(this.form)
       if (res.status === 200 || res.status === 201) {
         this.reload(this.year)
@@ -139,8 +156,10 @@ export default {
       } else {
         this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
       }
+      this.saveLoading = false
     },
     async reload(year) {
+      this.$nuxt.$emit('loading', true)
       this.year = year
       const res = await api.getActivityList(year)
 
@@ -151,6 +170,7 @@ export default {
       } else {
         this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
       }
+      this.$nuxt.$emit('loading', false)
     },
     showDialog() {
       this.form = {

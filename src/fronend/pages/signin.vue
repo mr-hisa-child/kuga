@@ -29,7 +29,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer />
-              <v-btn color="primary" @click="signin" outlined rounded>サインイン</v-btn>
+              <v-btn color="primary" @click="signin" outlined rounded :loading="loading">サインイン</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -44,11 +44,13 @@ export default {
   data() {
     return {
       email: null,
-      password: null
+      password: null,
+      loading: false
     }
   },
   methods: {
     async signin() {
+      this.loading = true
       const data = {
         email: this.email,
         password: this.password
@@ -65,6 +67,8 @@ export default {
       } else {
         this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
       }
+
+      this.loading = false
     }
   }
 }

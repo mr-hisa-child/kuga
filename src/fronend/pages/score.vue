@@ -97,10 +97,11 @@ export default {
     },
     async saveAttend() {
       const res = await api.attend(this.activityId, {
-        memberList: this.memberList.map(member => member.id)
+        memberList: this.attend
       })
       if (res.status === 200) {
-        this.saveScoreList(res.data)
+        await this.getScoreListByActivityId(this.activityId)
+        this.dialog = false
       } else {
         this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
       }

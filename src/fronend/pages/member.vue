@@ -67,6 +67,7 @@ export default {
   },
   methods: {
     async load() {
+      this.$nuxt.$emit('loading', true)
       const res = await api.getMemberList()
 
       if (res.status == 200) {
@@ -75,6 +76,7 @@ export default {
       } else {
         this.$nuxt.$emit('showMessage', 'システムエラー', 'error', 5000)
       }
+      this.$nuxt.$emit('loading', false)
     },
     selectRow(item) {
       this.form = {

@@ -34,13 +34,19 @@
             WHERE
                 id = #{id}
     </update>
+    <delete id="delete">
+    	DELETE FROM activity WHERE id = #{id}
+    </delete>
+    
     <select id="select" resultType="webapp.kuga.domain.model.Activity">
         SELECT
         <include refid="activityColumns">
             <property name="alias" value="a" />
         </include>
+        	
             FROM 
                 activity a
+                
             WHERE 
                 a.id = #{id}
     </select>
@@ -56,13 +62,30 @@
                 a.team_id = #{teamId}
     </select>
     
-    <select id="selectByTeamIdAndYear" resultType="webapp.kuga.domain.model.Activity">
+    <resultMap type="webapp.kuga.domain.model.Activity" id="activityResultMap">
+    	<id property="id" column="id" />
+    	<result property="teamId" column="teamId" />
+    	<result property="title" column="title" />
+    	<result property="year" column="year" />
+    	<result property="month" column="month" />
+    	<result property="day" column="day" />
+    	<collection property="scoreList" ofType="webapp.kuga.domain.model.Score">
+      		<id property="id" column="scoreId" />
+    	</collection>
+  	</resultMap>
+  	
+    <select id="selectByTeamIdAndYear" resultMap="activityResultMap">
         SELECT
         <include refid="activityColumns">
             <property name="alias" value="a" />
         </include>
+        ,s.id as scoreId
             FROM 
                 activity a
+                LEFT OUTER JOIN
+                	score s
+                ON
+                	s.activity_id = a.id
             WHERE 
                 a.team_id = #{teamId}
                 AND a.year = #{year}

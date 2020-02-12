@@ -41,15 +41,14 @@ export default {
       tab: null
     }
   },
-  //   created() {
-  //     this.reload(2020)
-  //   },
   methods: {
     ...mapActions({
       getScoreListByYear: 'score/findByYear'
     }),
-    reload(year) {
-      this.getScoreListByYear(year)
+    async reload(year) {
+      this.$nuxt.$emit('loading', true)
+      await this.getScoreListByYear(year)
+      this.$nuxt.$emit('loading', false)
     }
   }
 }
