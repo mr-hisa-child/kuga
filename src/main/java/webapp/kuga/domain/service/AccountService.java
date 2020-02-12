@@ -4,15 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import webapp.kuga.domain.model.Account;
-import webapp.kuga.domain.repository.account.AccountRepository;
+import webapp.kuga.domain.repository.AccountRepository;
 
 @Service
 public class AccountService {
 
-    @Autowired
-    private AccountRepository accountRepository;
+	@Autowired
+	private AccountRepository accountRepository;
 
-    public void signup(Account account) {
-        accountRepository.insert(account);
-    }
+	public void signup(Account account) {
+		accountRepository.save(account);
+	}
 }

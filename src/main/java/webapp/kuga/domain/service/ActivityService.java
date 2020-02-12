@@ -6,34 +6,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import webapp.kuga.domain.model.Activity;
-import webapp.kuga.domain.repository.activity.ActivityRepository;
+import webapp.kuga.domain.repository.ActivityRepository;
+import webapp.kuga.domain.repository.ScoreRepository;
 
 @Service
 public class ActivityService {
 	@Autowired
 	private ActivityRepository activityRepository;
 
+	@Autowired
+	private ScoreRepository scoreRepository;
+
 	public Activity find(String id) {
-		return activityRepository.select(id);
+		return activityRepository.findById(id).orElse(null);
 	}
 
 	public List<Activity> findByTeamId(String teamId) {
-		return activityRepository.selectByTeamId(teamId);
+		return activityRepository.findByTeamId(teamId);
 	}
 
 	public List<Activity> findByTeamIdAndYear(String teamId, int year) {
-		return activityRepository.selectByTeamIdAndYear(teamId, year);
+		return activityRepository.findByTeamIdAndYear(teamId, year);
 	}
 
 	public void create(Activity activity) {
-		activityRepository.insert(activity);
-	}
-
-	public void update(Activity activity) {
-		activityRepository.update(activity);
+		activityRepository.save(activity);
 	}
 
 	public void remove(String id) {
+
 		activityRepository.delete(id);
 	}
 }
