@@ -2,8 +2,10 @@ package domain.model.member;
 
 import domain.KugaDomainException;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class MemberNo {
     private int value;
 
@@ -15,7 +17,7 @@ public class MemberNo {
         try {
             this.value = Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            throw new KugaDomainException();
+            throw new KugaDomainException("背番号が数値ではありません。", value);
         }
     }
 }

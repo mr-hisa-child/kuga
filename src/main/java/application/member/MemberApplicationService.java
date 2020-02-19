@@ -48,17 +48,17 @@ public class MemberApplicationService {
      * @throws KugaDomainException
      */
     public void create(MemberCreateCommand command) throws Exception {
-        Member member = command.toDoaminEntity();
+        Member member = command.toDomainEntity();
         if (memberService.isDuplicatedMemberName(member)) {
-            throw new KugaApplicationException();
+            throw new KugaApplicationException("氏名が重複しています。", command);
         }
         memberRepository.save(member);
     }
 
     public void update(MemberUpdateCommand command) throws Exception {
-        Member member = command.toDoaminEntity();
+        Member member = command.toDomainEntity();
         if (memberService.isDuplicatedMemberName(member)) {
-            throw new KugaApplicationException();
+            throw new KugaApplicationException("氏名が重複しています。", command);
         }
         memberRepository.save(member);
     }
@@ -66,7 +66,7 @@ public class MemberApplicationService {
     public void remove(MemberRemoveCommand command) throws Exception {
         Member removeMember = memberRepository.find(command.getMemberId());
         if (Objects.isNull(removeMember)) {
-            throw new KugaApplicationException();
+            throw new KugaApplicationException("該当メンバーが存在しません。", command);
         }
         memberRepository.remove(command.getMemberId());
     }

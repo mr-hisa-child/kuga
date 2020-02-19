@@ -12,6 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.google.common.collect.Lists;
 
 import domain.model.member.Member;
+import domain.model.member.MemberName;
+import domain.model.member.MemberNo;
 import domain.model.member.MemberRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,7 +25,7 @@ class MemberServiceTest {
     @Test
     void isDuplicatedMemberName_存在しない場合() {
 
-        Member targetMember = new Member();
+        Member targetMember = Member.getMember(new MemberName(""), new MemberNo(""), "");
 
         when(memberRepository.findByNameAndTeamId(targetMember.getName(), targetMember.getTeamId()))
                 .thenReturn(Lists.newArrayList());

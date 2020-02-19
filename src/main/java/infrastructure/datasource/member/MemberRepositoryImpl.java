@@ -1,6 +1,7 @@
 package infrastructure.datasource.member;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import domain.KugaDomainException;
 import domain.model.member.Member;
 import domain.model.member.MemberName;
+import domain.model.member.MemberNo;
 import domain.model.member.MemberRepository;
 
 @Repository
@@ -21,14 +23,23 @@ public class MemberRepositoryImpl implements MemberRepository {
         return repository.findByTeamId(teamId)
                 .stream()
                 .map(entity -> toDomainEntity(entity))
+                .filter(member -> Objects.nonNull(member))
                 .collect(Collectors.toList());
     }
 
-    private Member toDomainEntity(MemberEntity entity) throws KugaDomainException {
-        Member member = Member.builder().id(id);
-        member.setId(entity.getId());
-        member.setName(new MemberName(entity.getName()));
-        return member;
+    /**
+     * 取得したユーザ情報をドメインオブジェクトに変換し、返却します。
+     * 
+     * @param entity ユーザ情報
+     * @return ドメインオブジェクト
+     */
+    private Member toDomainEntity(MemberEntity entity) {
+        try {
+            return Member.getMember(entity.getId(), new MemberName(entity.getName()), new MemberNo(entity.getNo()),
+                    entity.getTeamId());
+        } catch (KugaDomainException e) {
+            return null;
+        }
     }
 
     @Override

@@ -13,22 +13,22 @@ import domain.service.AccountService;
 @Service
 public class AccountApplicationService {
 
-	@Autowired
-	private AccountRepository accountRepository;
+    @Autowired
+    private AccountRepository accountRepository;
 
-	@Autowired
-	private AccountService accountService;
+    @Autowired
+    private AccountService accountService;
 
-	public void signup(AccountSignupCommand command) throws KugaApplicationException {
-		Account account = new Account();
-		account.setName(new AccountName(command.getName()));
-		account.setPassword(command.getPassword());
-		account.setEmail(new AccountEmail(command.getEmail()));
+    public void signup(AccountSignupCommand command) throws KugaApplicationException {
+        Account account = new Account();
+        account.setName(new AccountName(command.getName()));
+        account.setPassword(command.getPassword());
+        account.setEmail(new AccountEmail(command.getEmail()));
 
-		if (accountService.isExist(account.getEmail())) {
-			throw new KugaApplicationException();
-		}
+        if (accountService.isExist(account.getEmail())) {
+            throw new KugaApplicationException("すでにメールアドレスが存在しています。", command);
+        }
 
-		accountRepository.save(account);
-	}
+        accountRepository.save(account);
+    }
 }

@@ -3,6 +3,7 @@ package application.member;
 import domain.KugaDomainException;
 import domain.model.member.Member;
 import domain.model.member.MemberName;
+import domain.model.member.MemberNo;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -11,10 +12,7 @@ public class MemberCreateCommand {
     private String no;
     private String teamId;
 
-    public Member toDoaminEntity() throws KugaDomainException {
-        Member member = new Member();
-        member.setName(new MemberName(this.name));
-        member.setTeamId(this.teamId);
-        return member;
+    public Member toDomainEntity() throws KugaDomainException {
+        return Member.getMember(new MemberName(this.name), new MemberNo(this.no), this.teamId);
     }
 }

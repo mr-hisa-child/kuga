@@ -11,7 +11,7 @@ public class MemberName {
 
     public MemberName(String value) throws KugaDomainException {
         if (StringUtils.isEmpty(value)) {
-            throw new KugaDomainException();
+            throw new KugaDomainException("氏名が空です", value);
         }
         this.value = value;
     }

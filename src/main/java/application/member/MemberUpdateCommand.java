@@ -8,17 +8,12 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class MemberUpdateCommand {
-    private String memberId;
+    private String id;
     private String name;
     private String no;
     private String teamId;
 
-    public Member toDoaminEntity() throws KugaDomainException {
-        Member member = new Member();
-        member.setId(this.memberId);
-        member.setName(new MemberName(this.name));
-        member.setTeamId(this.teamId);
-        member.setNo(new MemberNo(no));
-        return member;
+    public Member toDomainEntity() throws KugaDomainException {
+        return Member.getMember(id, new MemberName(name), new MemberNo(no), teamId);
     }
 }

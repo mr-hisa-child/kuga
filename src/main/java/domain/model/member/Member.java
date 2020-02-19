@@ -18,9 +18,30 @@ public class Member {
 
     private String teamId;
 
-    public void changeName(MemberName name) throws KugaDomainException {
+    private Member() {
+
+    }
+
+    public static Member getMember(MemberName name, MemberNo no, String teamId) {
+        Member member = new Member();
+        member.name = name;
+        member.no = no;
+        member.teamId = teamId;
+        return member;
+    }
+
+    public static Member getMember(String id, MemberName name, MemberNo no, String teamId) {
+        Member member = new Member();
+        member.id = id;
+        member.name = name;
+        member.no = no;
+        member.teamId = teamId;
+        return member;
+    }
+
+    public void changeName(final MemberName name) throws KugaDomainException {
         if (Objects.isNull(name)) {
-            throw new KugaDomainException();
+            throw new KugaDomainException("氏名がnullです", name);
         }
         this.name = name;
     }
