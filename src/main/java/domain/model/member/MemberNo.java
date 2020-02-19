@@ -1,0 +1,21 @@
+package domain.model.member;
+
+import domain.KugaDomainException;
+import lombok.Getter;
+
+@Getter
+public class MemberNo {
+    private int value;
+
+    public MemberNo(int value) {
+        this.value = value;
+    }
+
+    public MemberNo(String value) throws KugaDomainException {
+        try {
+            this.value = Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            throw new KugaDomainException();
+        }
+    }
+}

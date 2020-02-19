@@ -1,33 +1,73 @@
 package application.member;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import application.KugaApplicationException;
+import domain.KugaDomainException;
+import domain.model.member.Member;
+import domain.model.member.MemberRepository;
+import domain.service.MemberService;
+import lombok.NoArgsConstructor;
+
 @Service
+@NoArgsConstructor
 public class MemberApplicationService {
 
-	@Autowired
-	private MemberRepository memberRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
-	public Member find(String id) {
-		return memberRepository.select(id);
-	}
+    @Autowired
+    private MemberService memberService;
 
-	public List<Member> findByTeamId(String teamId) {
-		return memberRepository.selectByTeamId(teamId);
-	}
+    public MemberApplicationService(MemberRepository memberRepository, MemberService memberService) {
+        this.memberRepository = memberRepository;
+        this.memberService = memberService;
+    }
 
-	public void create(Member member) {
-		memberRepository.insert(member);
-	}
+    public MemberData find(String id) {
+        return new MemberData(memberRepository.find(id));
+    }
 
-	public void update(Member member) {
-		memberRepository.update(member);
-	}
+    public List<MemberData> findByTeamId(String teamId) {
+        return memberRepository.findByTeamId(teamId)
+                .stream()
+                .map(member -> new MemberData(member))
+                .collect(Collectors.toList());
+    }
 
-	public void remove(String id) {
-		memberRepository.delete(id);
-	}
+    /**
+     * メンバーを新規作成します。
+     * 
+     * @param command メンバー作成コマンド
+     * @throws KugaApplicationException 氏名が重複している場合に発生
+     * @throws KugaDomainException
+     */
+    public void create(MemberCreateCommand command) throws Exception {
+        Member member = command.toDoaminEntity();
+        if (memberService.isDuplicatedMemberName(member)) {
+            throw new KugaApplicationException();
+        }
+        memberRepository.save(member);
+    }
+
+    public void update(MemberUpdateCommand command) throws Exception {
+        Member member = command.toDoaminEntity();
+        if (memberService.isDuplicatedMemberName(member)) {
+            throw new KugaApplicationException();
+        }
+        memberRepository.save(member);
+    }
+
+    public void remove(MemberRemoveCommand command) throws Exception {
+        Member removeMember = memberRepository.find(command.getMemberId());
+        if (Objects.isNull(removeMember)) {
+            throw new KugaApplicationException();
+        }
+        memberRepository.remove(command.getMemberId());
+    }
 }

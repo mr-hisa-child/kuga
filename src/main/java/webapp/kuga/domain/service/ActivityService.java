@@ -11,30 +11,30 @@ import webapp.kuga.domain.repository.ScoreRepository;
 
 @Service
 public class ActivityService {
-	@Autowired
-	private ActivityRepository activityRepository;
+    @Autowired
+    private ActivityRepository activityRepository;
 
-	@Autowired
-	private ScoreRepository scoreRepository;
+    @Autowired
+    private ScoreRepository scoreRepository;
 
-	public Activity find(String id) {
-		return activityRepository.findById(id).orElse(null);
-	}
+    public Activity find(String id) {
+        return activityRepository.findById(id).orElse(null);
+    }
 
-	public List<Activity> findByTeamId(String teamId) {
-		return activityRepository.findByTeamId(teamId);
-	}
+    public List<Activity> findByTeamId(String teamId) {
+        return activityRepository.findByTeamId(teamId);
+    }
 
-	public List<Activity> findByTeamIdAndYear(String teamId, int year) {
-		return activityRepository.findByTeamIdAndYear(teamId, year);
-	}
+    public List<Activity> findByTeamIdAndYear(String teamId, int year) {
+        return activityRepository.findByTeamIdAndYear(teamId, year);
+    }
 
-	public void create(Activity activity) {
-		activityRepository.save(activity);
-	}
+    public void create(Activity activity) {
+        activityRepository.save(activity);
+    }
 
-	public void remove(String id) {
+    public void remove(String id) {
 
-		activityRepository.delete(id);
-	}
+//		activityRepository.delete(id);
+    }
 }
